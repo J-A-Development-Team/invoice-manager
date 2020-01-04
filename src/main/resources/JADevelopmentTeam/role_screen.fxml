@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="JADevelopmentTeam.RoleScreenController">
+   <children>
+      <Label layoutX="331.0" layoutY="109.0" text="Choose your role" textAlignment="CENTER">
+         <font>
+            <Font size="28.0" />
+         </font>
+      </Label>
+      <AnchorPane layoutX="150.0" layoutY="250.0" prefHeight="278.0" prefWidth="600.0">
+         <children>
+            <Button fx:id="managerLoginButton" contentDisplay="CENTER" layoutX="216.0" layoutY="37.0" mnemonicParsing="false" style="-fx-background-color: #3ed111;">
+               <graphic>
+                  <FlowPane alignment="CENTER" columnHalignment="CENTER" orientation="VERTICAL" prefHeight="150.0" prefWidth="150.0">
+                     <children>
+                        <Label alignment="CENTER" contentDisplay="CENTER" text="Manager" textFill="WHITE">
+                           <padding>
+                              <Insets bottom="10.0" />
+                           </padding>
+                           <font>
+                              <Font size="26.0" />
+                           </font>
+                        </Label>
+                        <ImageView fitHeight="94.0" fitWidth="112.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@manager.png" />
+                           </image>
+                        </ImageView>
+                     </children>
+                  </FlowPane>
+               </graphic>
+            </Button>
+            <Button fx:id="workerLoginButton" contentDisplay="CENTER" layoutX="403.0" layoutY="37.0" mnemonicParsing="false" style="-fx-background-color: #0787f0;">
+               <graphic>
+                  <FlowPane alignment="CENTER" columnHalignment="CENTER" orientation="VERTICAL" prefHeight="150.0" prefWidth="150.0">
+                     <children>
+                        <Label alignment="CENTER" contentDisplay="CENTER" text="Worker" textFill="WHITE">
+                           <padding>
+                              <Insets bottom="10.0" />
+                           </padding>
+                           <font>
+                              <Font size="26.0" />
+                           </font>
+                        </Label>
+                        <ImageView fitHeight="94.0" fitWidth="112.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@worker.png" />
+                           </image>
+                        </ImageView>
+                     </children>
+                  </FlowPane>
+               </graphic>
+            </Button>
+            <Button fx:id="adminLoginButton" contentDisplay="CENTER" layoutX="32.0" layoutY="37.0" mnemonicParsing="false" style="-fx-background-color: #c9160c;">
+               <graphic>
+                  <FlowPane alignment="CENTER" columnHalignment="CENTER" orientation="VERTICAL" prefHeight="150.0" prefWidth="150.0">
+                     <children>
+                        <Label alignment="CENTER" contentDisplay="CENTER" text="Admin" textFill="WHITE">
+                           <padding>
+                              <Insets bottom="10.0" />
+                           </padding>
+                           <font>
+                              <Font size="26.0" />
+                           </font>
+                        </Label>
+                        <ImageView fitHeight="94.0" fitWidth="112.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@gear.png" />
+                           </image>
+                        </ImageView>
+                     </children>
+                  </FlowPane>
+               </graphic>
+            </Button>
+         </children>
+      </AnchorPane>
+   </children>
+</Pane>
