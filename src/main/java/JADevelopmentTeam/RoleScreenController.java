@@ -1,11 +1,14 @@
 package JADevelopmentTeam;
 
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
+import javafx.stage.Stage;
 
 import java.io.IOException;
 
 public class RoleScreenController {
+    Stage stage = null;
     @FXML
     private Button adminLoginButton;
     @FXML
@@ -16,7 +19,9 @@ public class RoleScreenController {
 
     // Define the nodes from the Layout1.fxml file. This allows them to be referenced within the controller
 
-
+    public void initData(Stage stage){
+        this.stage = stage;
+    }
     public RoleScreenController() {
 
     }
@@ -30,19 +35,19 @@ public class RoleScreenController {
      */
     @FXML
     private void adminLogin() {
-        openLoginScreen();
+        openLoginScreen(1);
         // Add an action for the "Open Layout2" button
 
     }
     @FXML
     private void managerLogin() {
-        openLoginScreen();
+        openLoginScreen(2);
 
         // Add an action for the "Open Layout2" button
 
     } @FXML
     private void workerLogin() {
-        openLoginScreen();
+        openLoginScreen(3);
 
         // Add an action for the "Open Layout2" button
 
@@ -50,12 +55,15 @@ public class RoleScreenController {
     /**
      * Performs the action of loading and showing Layout2
      */
-    private void openLoginScreen() {
+    private void openLoginScreen(int userChosen) {
 
         // Create the second controller, which loads its own FXML file. We pass a reference to this controller
         // using the keyword [this]; that allows the second controller to access the methods contained in here.
         try {
-            App.setRoot("login_screen");
+            FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("login_screen.fxml"));
+            stage.getScene().setRoot(fxmlLoader.load());
+            LoginScreenController loginScreenController = fxmlLoader.getController();
+            loginScreenController.initData(stage,userChosen);
         } catch (IOException e) {
             e.printStackTrace();
         }

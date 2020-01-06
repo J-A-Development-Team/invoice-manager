@@ -14,7 +14,7 @@ import javafx.stage.Stage;
 import javax.swing.text.html.ListView;
 import java.io.IOException;
 
-public class WorkerMenuScreenController  {
+public class ManagerMenuScreenController  {
     Stage stage = null;
     @FXML
     private Pane invoicePane,clientPane;
@@ -23,14 +23,14 @@ public class WorkerMenuScreenController  {
     @FXML
     private JFXButton addInvoiceButton;
     @FXML
-    private JFXListView <Invoice>  invoicesListView = new JFXListView<>();
+    private JFXListView <String>  invoicesListView = new JFXListView<>();
     public void initData(Stage stage) {
         this.stage = stage;
     }
     public void handleMenuButtonAction(javafx.event.ActionEvent event) {
         if(event.getSource()==invoiceMenuButton){
             invoicePane.toFront();
-        }else if(event.getSource() == clientMenuButton){
+        }else if(event.getSource() == addInvoiceButton){
             clientPane.toFront();
         }else{
             logout();
@@ -57,14 +57,14 @@ public class WorkerMenuScreenController  {
         }
         stage.setScene(scene);
         stage.show();
-        Invoice invoice = new Invoice();
-        invoice.string = "Masło";
-        invoice.number = 1;
-        invoicesListView.getItems().add(invoice);
+
+        invoicesListView.getItems().add("Masło");
     }
     @FXML
     private void initialize() {
         addInvoiceButton.setOnAction(event -> addStringToList());
 
+        ObservableList<String> seasonList = FXCollections.<String>observableArrayList("Spring", "Summer", "Fall", "Winter");
+        invoicesListView.getItems().addAll(seasonList);
     }
 }
