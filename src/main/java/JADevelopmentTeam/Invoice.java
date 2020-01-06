@@ -1,107 +1,86 @@
 package JADevelopmentTeam;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
-
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Date;
 
-public final class Invoice {
-    private final int number;
-    private final int clientId;
-    private final String clientName;
-    private final String clientNip;
-    private final String clientAddressFirstLine;
-    private final String clientAddressSecondLine;
-    private final String clientCity;
-    private final String clientPostCode;
-    private final Date date;
-    private final float totalNet;
-    private final float totalGross;
+public class Invoice {
+    private final int invoiceId;
     private final ArrayList<InvoiceElement> elements;
+    private final String clientName;
+    private final String clientNIP;
+    private final String clientPostCode;
+    private final String clientStreetAndNumber;
+    private final String clientCity;
+    private final Float fullGross;
+    private final Float fullNet;
+    private final Date date;
 
-    Invoice(int number, Client client, Date date, float totalNet, float totalGross, ArrayList<InvoiceElement> elements) {
-        this.number = number;
-        this.clientId = client.getId();
-        this.clientName = client.getName();
-        this.clientNip = client.getNip();
-        this.clientAddressFirstLine = client.getAddressFirstLine();
-        this.clientAddressSecondLine = client.getAddressSecondLine();
-        this.clientCity = client.getCity();
-        this.clientPostCode = client.getPostCode();
-        this.date = date;
-        this.totalNet = totalNet;
-        this.totalGross = totalGross;
+    Invoice(final int invoiceId, final ArrayList<InvoiceElement> elements, String clientName,
+            String clientNIP, String clientPostCode, String clientStreetAndNumber,
+            String clientCity, float fullNet, float fullGross, Date date) {
+        this.invoiceId = invoiceId;
         this.elements = elements;
-    }
-
-    public int getNumber() {
-        return number;
-    }
-
-    public int getClientId() {
-        return clientId;
-    }
-
-    public String getClientName() {
-        return clientName;
-    }
-
-    private String getClientNip() {
-        return clientNip;
-    }
-
-    private String getClientAddressFirstLine() {
-        return clientAddressFirstLine;
-    }
-
-    private String getClientAddressSecondLine() {
-        return clientAddressSecondLine;
-    }
-
-    private String getClientCity() {
-        return clientCity;
-    }
-
-    private String getClientPostCode() {
-        return clientPostCode;
-    }
-
-    public Date getDate() {
-        return date;
-    }
-
-    public float getTotalNet() {
-        return totalNet;
-    }
-
-    public float getTotalGross() {
-        return totalGross;
-    }
-
-    public String getElementsAsJson() {
-        Gson gsonBuilder = new GsonBuilder().create();
-        Type elementsType = new TypeToken<ArrayList<InvoiceElement>>() {
-        }.getType();
-        return gsonBuilder.toJson(elements, elementsType);
+        this.clientName = clientName;
+        this.clientNIP = clientNIP;
+        this.clientPostCode = clientPostCode;
+        this.clientStreetAndNumber = clientStreetAndNumber;
+        this.clientCity = clientCity;
+        this.fullNet = fullNet;
+        this.fullGross = fullGross;
+        this.date = date;
     }
 
     @Override
     public String toString() {
-        StringBuilder string = new StringBuilder("number: " + getNumber() +
-                "\n client name: " + getClientName() +
-                "\n Address: \n " + getClientAddressFirstLine() + " " + getClientAddressSecondLine() +
-                "\n " + getClientPostCode() + " " + getClientCity() +
-                "\n NIP: " + getClientNip() +
-                "\n " + getDate() +
-                "\n Products: " + "\n ");
-        for (InvoiceElement element : elements) {
-            string.append(element.getItem().getName()).append(" x ").append(element.getQuantity()).append(" net: ").append(element.getSubtotalNet()).append(" gross: ").append(element.getSubtotalGross()).append("\n ");
+        StringBuilder s = new StringBuilder("Faktura VAT Nr " + invoiceId + ",z dnia " + date + "\n" +
+                "Sprzedawca: " + User.name + "\n" +
+                "       " + User.streetAndNumber + "\n" +
+                "       " + User.postcode + " " + User.city + "\n" +
+                "NIP    " + User.NIP + "\n" +
+                "Nabywca\n" +
+                clientName + "\n" +
+                clientStreetAndNumber + ", " + clientPostCode + " " + clientCity + "\n" +
+                "NIP    " + clientNIP + "\n" +
+                "Nazwa towaru lub usługi\n");
+        for (InvoiceElement element :
+                elements) {
+            s.append(element.getItem().getName());
+            s.append(" Ilość ");
+            s.append(String.format("%,.2f", element.getQuantity()));
+            s.append(" netto ");
+            s.append(String.format("%,.2f", element.getItem().getNetAmount()));
+            s.append(" stawka ");
+            s.append(TaxManager.taxToString(element.getItem().getTaxType()));
+            s.append(" kwota ");
+            s.append(String.format("%,.2f", TaxManager.taxCalculation(element.netCalculation(), element.getItem().getTaxType())));
+            s.append(" Wartość z podatkiem ");
+            s.append(String.format("%,.2f", element.grossCalculation()));
+            s.append("\n");
         }
-        string.append("Total Net: ").append(totalNet).append("\n Total Gross: ").append(totalGross);
-        return string.toString();
+        s.append("\n    Do zapłaty      netto: ");
+        s.append(String.format("%,.2f", fullNet));
+        s.append("  brutto: ");
+        s.append(String.format("%,.2f", fullGross));
+        return s.toString();
+    }
 
+    public String getClientNIP() {
+        return clientNIP;
+    }
+
+    public ArrayList<InvoiceElement> getElements() {
+        return elements;
+    }
+
+    public Float getFullGross() {
+        return fullGross;
+    }
+
+    public Float getFullNet() {
+        return fullNet;
+    }
+
+    public Date getDate() {
+        return date;
     }
 }

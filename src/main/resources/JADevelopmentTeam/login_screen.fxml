@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.jfoenix.controls.JFXButton?>
-<?import com.jfoenix.controls.JFXPasswordField?>
-<?import com.jfoenix.controls.JFXTextField?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -16,8 +16,8 @@
             <Font size="27.0" />
          </font>
       </Label>
-      <JFXTextField focusColor="BLACK" layoutX="308.0" layoutY="202.0" prefHeight="26.0" prefWidth="285.0" promptText="username" style="-fx-prompt-text-fill: white; -fx-text-fill: white;" unFocusColor="WHITE" />
-      <JFXPasswordField focusColor="#00000085" layoutX="308.0" layoutY="287.0" prefHeight="26.0" prefWidth="285.0" promptText="password" style="-fx-prompt-text-fill: white; -fx-text-fill: white;" unFocusColor="WHITE" />
+      <TextField layoutX="308.0" layoutY="202.0" prefHeight="26.0" prefWidth="285.0" promptText="username" />
+      <PasswordField layoutX="308.0" layoutY="287.0" prefHeight="26.0" prefWidth="285.0" promptText="password" />
       <JFXButton fx:id="loginButton" graphicTextGap="10.0" layoutX="330.0" layoutY="422.0" onAction="#login" prefHeight="26.0" prefWidth="240.0" style="-fx-background-color: white;" text="Login">
          <font>
             <Font size="24.0" />

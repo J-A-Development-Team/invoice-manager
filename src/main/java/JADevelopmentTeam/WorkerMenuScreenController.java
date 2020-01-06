@@ -57,10 +57,8 @@ public class WorkerMenuScreenController  {
         }
         stage.setScene(scene);
         stage.show();
-        Invoice invoice = new Invoice();
-        invoice.string = "Masło";
-        invoice.number = 1;
-        invoicesListView.getItems().add(invoice);
+       // Invoice invoice = new Invoice();
+       // invoicesListView.getItems().add(invoice);
     }
     @FXML
     private void initialize() {

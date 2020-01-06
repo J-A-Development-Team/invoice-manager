@@ -1,31 +1,31 @@
 package JADevelopmentTeam;
 
 public class Item {
-    private final int id;
-    private final float price;
     private final String name;
-    private final TaxManager.TaxType taxType;
+    private final Float netAmount;
+    private final TaxManager.taxType taxType;
+    private final int id;
 
-    public Item(int id, float price, String name, TaxManager.TaxType taxType) {
-        this.id = id;
-        this.price = price;
+    public Item(String name, Float netAmount, TaxManager.taxType taxType,int id) {
         this.name = name;
+        this.netAmount = netAmount;
         this.taxType = taxType;
+        this.id = id;
     }
 
     public int getId() {
         return id;
     }
 
-    public float getPrice() {
-        return price;
-    }
-
     public String getName() {
         return name;
     }
 
-    public TaxManager.TaxType getTaxType() {
+    public Float getNetAmount() {
+        return netAmount;
+    }
+
+    public TaxManager.taxType getTaxType() {
         return taxType;
     }
 }
