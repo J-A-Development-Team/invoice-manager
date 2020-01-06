@@ -1,0 +1,169 @@
+DROP DATABASE IF EXISTS invoice_project;
+CREATE DATABASE invoice_project;
+use invoice_project;
+create table client
+(
+	id int auto_increment,
+	name varchar(45) not null,
+	NIP varchar(10) not null,
+	city varchar(45) not null,
+	street_and_number varchar(45) null,
+	postcode varchar(6) null,
+	primary key (id)
+);
+create table invoice
+(
+	id int auto_increment,
+	client_id int not null,
+	date date not null,
+	sale_date date not null,
+	modified boolean default false,
+	user_id int not null,
+	primary key (id)
+);
+create table invoice_element
+(
+	invoice_id int not null,
+	item_id int not null,
+	quantity float not null,
+	constraint invoice_element_pk
+		primary key (invoice_id, item_id, quantity)
+);
+create table user
+(
+	id int auto_increment,
+	name varchar(20) not null,
+	password varchar(32) not null,
+	type enum('admin', 'manager', 'worker') not null,
+	primary key (id)
+);
+create table item
+(
+	id int not null,
+	name varchar(30) not null,
+	tax enum('23', '8', '5', '0', 'zw') default 'zw',
+	description varchar(200) default '',
+	cost float not null,
+	primary key (id)
+);
+create table warehouse
+(
+	item_id int auto_increment,
+	available_amount float default 0,
+	primary key (item_id)
+);
+DELIMITER //
+CREATE TRIGGER date_check
+    BEFORE INSERT
+    ON invoice
+    FOR EACH ROW
+BEGIN
+    SET NEW.date = current_date;
+    IF NEW.sale_date > current_date THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Invalid date!';
+    END IF;
+END//
+CREATE TRIGGER cost_check
+    BEFORE INSERT
+    ON item
+    FOR EACH ROW
+BEGIN
+    IF NEW.cost < 0 THEN
+        SIGNAL SQLSTATE '45001' SET MESSAGE_TEXT = 'Invalid item cost!';
+    END IF;
+END//
+CREATE TRIGGER amount_check_and_taking_product_from_warehouse
+    BEFORE INSERT
+    ON invoice_element
+    FOR EACH ROW
+BEGIN
+    SELECT w.available_amount,item.name
+    FROM item
+             INNER JOIN warehouse w on item.id = w.item_id
+    WHERE item.id = NEW.item_id
+    INTO @amount,@name;
+    IF NEW.quantity > @amount THEN
+        SET @info = CONCAT('Currently available is only ',@amount,'of  ',@name);
+        SIGNAL SQLSTATE '45002' SET MESSAGE_TEXT = @info;
+    ELSE
+        UPDATE warehouse
+        SET available_amount = @amount - NEW.quantity
+        WHERE warehouse.item_id = NEW.item_id;
+    END IF;
+END//
+CREATE TRIGGER password_encryption
+    BEFORE INSERT
+    ON user
+    FOR EACH ROW
+BEGIN
+    SET NEW.password = md5(NEW.password);
+END//
+CREATE TRIGGER product_returning_to_warehouse
+    BEFORE DELETE
+    ON invoice_element
+    FOR EACH ROW
+BEGIN
+    UPDATE warehouse
+    SET available_amount = warehouse.available_amount + OLD.quantity
+    WHERE warehouse.item_id = OLD.item_id;
+END//
+CREATE TRIGGER deleting_invoice
+    BEFORE DELETE
+    ON invoice
+    FOR EACH ROW
+BEGIN
+    DELETE invoice_element FROM invoice_element WHERE invoice_id = OLD.id;
+END//
+DELIMITER ;
+alter table invoice
+	add constraint invoice_client_id_fk
+		foreign key (client_id) references client (id),
+	add constraint invoice_user_id_fk
+		foreign key (user_id) references user (id);
+alter table invoice_element
+	add constraint invoice_element_invoice_id_fk
+		foreign key (invoice_id) references invoice (id),
+    add constraint invoice_element_item_id_fk
+		foreign key (item_id) references item (id);
+CREATE INDEX item_index ON invoice_element(item_id);
+alter table item
+    add constraint item_warehouse_item_id_fk
+		foreign key (id) references warehouse (item_id);
+DELIMITER //
+CREATE TRIGGER client_verification_insert
+    BEFORE INSERT
+    ON client
+    FOR EACH ROW
+BEGIN
+    SET @nipLenght = length(NEW.NIP);
+    SET @postcode = CONCAT(SUBSTRING(NEW.postcode, 1, 2), SUBSTRING(NEW.postcode, 4, 3));
+    IF (length(NEW.postcode) != 6 OR SUBSTRING(NEW.postcode, 3, 1) != '-' OR
+        @postcode NOT REGEXP '^[0-9]+$') THEN
+        SIGNAL SQLSTATE '45004' SET MESSAGE_TEXT = 'Invalid postcode, should be 00-000!';
+    end if;
+    IF (@nipLenght < 9 OR NEW.NIP NOT REGEXP '^[0-9]+$') THEN
+        SIGNAL SQLSTATE '45003' SET MESSAGE_TEXT = 'Invalid NIP/PESEL!';
+    end if;
+END//
+CREATE TRIGGER client_verification_update
+    BEFORE UPDATE
+    ON client
+    FOR EACH ROW
+BEGIN
+    SET @nipLenght = length(NEW.NIP);
+    SET @postcode = CONCAT(SUBSTRING(NEW.postcode, 1, 2), SUBSTRING(NEW.postcode, 4, 3));
+    IF (length(NEW.postcode) != 6 OR SUBSTRING(NEW.postcode, 3, 1) != '-' OR
+        @postcode NOT REGEXP '^[0-9]+$') THEN
+        SIGNAL SQLSTATE '45004' SET MESSAGE_TEXT = 'Invalid postcode, should be 00-000!';
+    end if;
+    IF (@nipLenght < 9 OR NEW.NIP NOT REGEXP '^[0-9]+$') THEN
+        SIGNAL SQLSTATE '45003' SET MESSAGE_TEXT = 'Invalid NIP/PESEL!';
+    end if;
+END//
+DELIMITER ;
+DROP USER IF EXISTS 'invoice_admin'@'localhost';
+DROP USER IF EXISTS 'invoice_manager'@'localhost';
+DROP USER IF EXISTS 'invoice_worker'@'localhost';
+CREATE USER 'invoice_admin'@'localhost' IDENTIFIED BY 'admin_password';
+CREATE USER 'invoice_manager'@'localhost' IDENTIFIED BY 'manager_password';
+CREATE USER 'invoice_worker'@'localhost' IDENTIFIED BY 'worker_password';
