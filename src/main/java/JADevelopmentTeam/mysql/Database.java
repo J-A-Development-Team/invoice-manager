@@ -18,6 +18,10 @@ class Database {
         connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/invoice_project", user, password);
     }
 
+    public Connection getConnection() {
+        return connection;
+    }
+
     protected int authenticate(String login, String password, String userType) throws SQLException {
         preparedStatement = connection.prepareStatement("SELECT  authenticate(?,?,?)");
         preparedStatement.setString(1, login);
