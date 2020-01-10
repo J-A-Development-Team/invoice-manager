@@ -12,7 +12,7 @@ public class ItemDatabase extends Database {
         super(user, password);
     }
     public static Item resultToItem(ResultSet rs) throws SQLException {
-        return new Item(rs.getString("name"),rs.getFloat("cost"), TaxManager.stringToTax(rs.getString("tax")),rs.getInt("item_id"));
+        return new Item(rs.getString("name"),rs.getFloat("cost"), TaxManager.stringToTax(rs.getString("tax")),rs.getInt("item_id"), 1);
     }
     public void add_item(String name,TaxManager.taxType taxType,String description,Float cost,float availableAmount) throws SQLException {
         preparedStatement = connection.prepareStatement("call add_item (?,?,?,?,?)");
