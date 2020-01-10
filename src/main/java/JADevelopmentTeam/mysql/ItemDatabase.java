@@ -1,18 +1,23 @@
 package JADevelopmentTeam.mysql;
 
+import JADevelopmentTeam.InvoiceElement;
 import JADevelopmentTeam.Item;
 import JADevelopmentTeam.TaxManager;
 
-import java.sql.Date;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
+import java.util.ArrayList;
 
 public class ItemDatabase extends Database {
-    ItemDatabase(String user, String password) {
+    ItemDatabase(Connection connection) {
+        super(connection);
+    }
+
+    public ItemDatabase(String user, String password) throws SQLException {
         super(user, password);
     }
+
     public static Item resultToItem(ResultSet rs) throws SQLException {
-        return new Item(rs.getString("name"),rs.getFloat("cost"), TaxManager.stringToTax(rs.getString("tax")),rs.getInt("item_id"), 1);
+        return new Item(rs.getString("name"),rs.getFloat("cost"), TaxManager.stringToTax(rs.getString("tax")),rs.getInt("item_id"), rs.getInt("available_amount"));
     }
     public void add_item(String name,TaxManager.taxType taxType,String description,Float cost,float availableAmount) throws SQLException {
         preparedStatement = connection.prepareStatement("call add_item (?,?,?,?,?)");
@@ -37,5 +42,14 @@ public class ItemDatabase extends Database {
         preparedStatement = connection.prepareStatement("call edit_item_cost(?,?)");
         preparedStatement.setInt(1,id);
         preparedStatement.setFloat(2,newCost);
+    }
+    public ArrayList<Item> getAllItems() throws SQLException {
+        ArrayList<Item> items = new ArrayList<>();
+        PreparedStatement preparedStatement = connection.prepareStatement("call get_all_items_with_amount()");
+        ResultSet rs = preparedStatement.executeQuery();
+        while (rs.next()) {
+            items.add(resultToItem(rs));
+        }
+        return items;
     }
 }

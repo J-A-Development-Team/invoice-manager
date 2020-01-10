@@ -10,10 +10,13 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class InvoiceElementDatabase extends Database {
-    InvoiceElementDatabase(String user, String password) {
+    public InvoiceElementDatabase(String user, String password) throws SQLException {
         super(user, password);
     }
 
+    public InvoiceElementDatabase(Connection connection) {
+        super(connection);
+    }
 
     public void deleteInvoiceElement(int invoice_id, int itemID, float quantity) throws SQLException {
         PreparedStatement preparedStatement = connection.prepareStatement("call add_invoice_element(?,?,?)");

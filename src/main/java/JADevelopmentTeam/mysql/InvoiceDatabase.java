@@ -5,6 +5,7 @@ import JADevelopmentTeam.Invoice;
 import JADevelopmentTeam.InvoiceBuilder;
 import JADevelopmentTeam.InvoiceElement;
 
+import java.sql.Connection;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -13,10 +14,15 @@ import java.util.ArrayList;
 public class InvoiceDatabase extends Database {
     private static InvoiceBuilder invoiceBuilder;
 
-    public InvoiceDatabase(String user, String password) {
+    public InvoiceDatabase(String user, String password) throws SQLException {
         super(user, password);
+    }
+
+    public InvoiceDatabase(Connection connection) {
+        super(connection);
         invoiceBuilder = new InvoiceBuilder();
     }
+
 
     private ArrayList<Invoice> resultToInvoices(ResultSet rs) throws SQLException {
         ArrayList<Invoice> invoices = new ArrayList<>();
@@ -58,7 +64,7 @@ public class InvoiceDatabase extends Database {
     }
 
     private int lastInvoiceId() throws SQLException {
-        ResultSet rs = statement.executeQuery("SELECT MAX(invoice_id) FROM invoice");
+        ResultSet rs = connection.createStatement().executeQuery("SELECT MAX(invoice_id) FROM invoice");
         rs.next();
         return rs.getInt(1);
     }

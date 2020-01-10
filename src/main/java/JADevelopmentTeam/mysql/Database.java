@@ -4,20 +4,18 @@ import java.sql.*;
 
 class Database {
     Connection connection;
-    Statement statement;
     PreparedStatement preparedStatement;
 
-    Database(String user, String password) {
+    public Database(String user, String password) throws SQLException {
         makeJDBCConnection(user, password);
     }
 
-    private void makeJDBCConnection(String user, String password) {
-        try {
-            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/invoice_project", user, password);
-            statement = connection.createStatement();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+    public Database(Connection connection){
+        this.connection = connection;
+    }
+
+    private void makeJDBCConnection(String user, String password) throws SQLException {
+        connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/invoice_project", user, password);
     }
 
     protected int authenticate(String login, String password, String userType) throws SQLException {

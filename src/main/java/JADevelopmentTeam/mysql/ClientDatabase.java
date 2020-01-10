@@ -3,6 +3,7 @@ package JADevelopmentTeam.mysql;
 
 import JADevelopmentTeam.Client;
 
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -10,8 +11,12 @@ import java.util.ArrayList;
 public class ClientDatabase extends Database {
 
 
-    ClientDatabase(String user, String password) {
+    public ClientDatabase(String user, String password) throws SQLException {
         super(user, password);
+    }
+
+    public ClientDatabase(Connection connection) {
+        super(connection);
     }
 
     public void addClient(Client client) throws SQLException {
@@ -27,7 +32,7 @@ public class ClientDatabase extends Database {
 
     public ArrayList<Client> getAllClients() throws SQLException {
         ArrayList<Client> clients = new ArrayList<>();
-        ResultSet rs = statement.executeQuery("call get_all_clients()");
+        ResultSet rs = connection.createStatement().executeQuery("call get_all_clients()");
         while (rs.next())
             clients.add(resultToClient(rs));
         return clients;
