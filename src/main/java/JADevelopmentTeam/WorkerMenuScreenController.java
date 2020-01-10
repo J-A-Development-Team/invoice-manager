@@ -1,6 +1,7 @@
 package JADevelopmentTeam;
 
 import JADevelopmentTeam.mysql.Database;
+import JADevelopmentTeam.mysql.InvoiceDatabase;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXListView;
 import javafx.beans.value.ChangeListener;
@@ -15,6 +16,7 @@ import javafx.stage.Stage;
 
 import javax.swing.text.html.ListView;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class WorkerMenuScreenController  {
@@ -28,7 +30,7 @@ public class WorkerMenuScreenController  {
     private JFXButton addInvoiceButton;
     @FXML
     private JFXListView <Invoice>  invoicesListView = new JFXListView<>();
-    ArrayList<Invoice> invoices = new ArrayList<>();
+    ObservableList<Invoice> invoices = FXCollections.<Invoice>observableArrayList();
     Database database;
     User user = new User();
     public void initData(Stage stage, Database dataBase,User user) {
@@ -36,9 +38,17 @@ public class WorkerMenuScreenController  {
         this.user = user;
         this.stage = stage;
         welcomeMessage.setText("Welcome \n"+user.name+"!");
+        initializeWithData();
     }
 
-
+    private void initializeWithData(){
+        InvoiceDatabase invoiceDatabase = new InvoiceDatabase(database.getConnection());
+        try {
+            invoices.addAll(invoiceDatabase.getAllInvoices());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
     public void handleMenuButtonAction(javafx.event.ActionEvent event) {
         if(event.getSource()==invoiceMenuButton){
             invoicePane.toFront();
