@@ -4,13 +4,17 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class InvoiceBuilder {
-    private final ArrayList<InvoiceElement> elements;
+    private ArrayList<InvoiceElement> elements;
     public InvoiceBuilder(){
         elements = new ArrayList<>();
     }
 
     public void addElement(InvoiceElement invoiceElement){
         elements.add(invoiceElement);
+    }
+
+    public void setElements(ArrayList<InvoiceElement> elements) {
+        this.elements = elements;
     }
 
     public Invoice createNewInvoice(Client client, Date date, int id){

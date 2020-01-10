@@ -47,7 +47,6 @@
                 <version>0.0.3</version>
                 <configuration>
                     <mainClass>JADevelopmentTeam.App</mainClass>
-                    <executable>/usr/lib/jvm/jdk-11.0.2/bin/java</executable>
                 </configuration>
             </plugin>
 

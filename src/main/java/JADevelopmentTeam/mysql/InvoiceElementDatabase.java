@@ -7,6 +7,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class InvoiceElementDatabase extends Database {
     InvoiceElementDatabase(String user, String password) {
@@ -15,11 +16,10 @@ public class InvoiceElementDatabase extends Database {
 
 
     public void deleteInvoiceElement(int invoice_id, int itemID, float quantity) throws SQLException {
-        statement.executeUpdate("DELETE invoice_element\n" +
-                "FROM invoice_element\n" +
-                "WHERE invoice_id = '" + invoice_id + "'\n" +
-                "AND item_id = '" + itemID + "'" +
-                "AND quantity = '"+ quantity +"'");
+        PreparedStatement preparedStatement = connection.prepareStatement("call add_invoice_element(?,?,?)");
+        preparedStatement.setInt(1, invoice_id);
+        preparedStatement.setInt(2, itemID);
+        preparedStatement.setFloat(3, quantity);
     }
 
     static InvoiceElement resultToInvoiceElement(ResultSet rs) throws SQLException {
@@ -27,7 +27,7 @@ public class InvoiceElementDatabase extends Database {
     }
 
     public static void addInvoiceElement(InvoiceElement invoiceElement, int invoiceId, Connection connection) throws SQLException {
-        PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO invoice_element VALUES (?,?,?)");
+        PreparedStatement preparedStatement = connection.prepareStatement("call add_invoice_element(?,?,?)");
         preparedStatement.setInt(1, invoiceId);
         preparedStatement.setInt(2, invoiceElement.getItem().getId());
         preparedStatement.setFloat(3, invoiceElement.getQuantity());
@@ -35,6 +35,20 @@ public class InvoiceElementDatabase extends Database {
     }
 
     public void addInvoiceElement(InvoiceElement invoiceElement, int invoiceId) throws SQLException {
-        addInvoiceElement(invoiceElement, invoiceId,connection);
+        addInvoiceElement(invoiceElement, invoiceId, connection);
+    }
+
+    public ArrayList<InvoiceElement> getAllInvoiceElements(int invoiceId) throws SQLException {
+        return getAllInvoiceElements(invoiceId,connection);
+    }
+    public static ArrayList<InvoiceElement> getAllInvoiceElements(int invoiceId, Connection connection) throws SQLException {
+        ArrayList<InvoiceElement> invoiceElements = new ArrayList<>();
+        PreparedStatement preparedStatement = connection.prepareStatement("call get_all_invoice_elements_for_invoice_id(?)");
+        preparedStatement.setInt(1, invoiceId);
+        ResultSet rs = preparedStatement.executeQuery();
+        while (rs.next()) {
+            invoiceElements.add(resultToInvoiceElement(rs));
+        }
+        return invoiceElements;
     }
 }

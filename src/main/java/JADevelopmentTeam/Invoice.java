@@ -64,6 +64,10 @@ public class Invoice {
         return s.toString();
     }
 
+    public int getInvoiceId() {
+        return invoiceId;
+    }
+
     public String getClientNIP() {
         return clientNIP;
     }
