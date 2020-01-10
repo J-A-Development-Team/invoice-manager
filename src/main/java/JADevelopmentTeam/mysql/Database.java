@@ -2,7 +2,7 @@ package JADevelopmentTeam.mysql;
 
 import java.sql.*;
 
-class Database {
+public class Database {
     Connection connection;
     PreparedStatement preparedStatement;
 
@@ -22,7 +22,7 @@ class Database {
         return connection;
     }
 
-    protected int authenticate(String login, String password, String userType) throws SQLException {
+    public int authenticate(String login, String password, String userType) throws SQLException {
         preparedStatement = connection.prepareStatement("SELECT  authenticate(?,?,?)");
         preparedStatement.setString(1, login);
         preparedStatement.setString(2, password);

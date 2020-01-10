@@ -18,7 +18,7 @@ public class RoleScreenController {
     // Holds this controller's Stage
 
     // Define the nodes from the Layout1.fxml file. This allows them to be referenced within the controller
-
+    User user = new User();
     public void initData(Stage stage){
         this.stage = stage;
     }
@@ -35,19 +35,22 @@ public class RoleScreenController {
      */
     @FXML
     private void adminLogin() {
-        openLoginScreen(1);
+        user.type = User.Type.admin;
+        openLoginScreen();
         // Add an action for the "Open Layout2" button
 
     }
     @FXML
     private void managerLogin() {
-        openLoginScreen(2);
+        user.type = User.Type.manager;
+        openLoginScreen();
 
         // Add an action for the "Open Layout2" button
 
     } @FXML
     private void workerLogin() {
-        openLoginScreen(3);
+        user.type = User.Type.worker;
+        openLoginScreen();
 
         // Add an action for the "Open Layout2" button
 
@@ -55,7 +58,7 @@ public class RoleScreenController {
     /**
      * Performs the action of loading and showing Layout2
      */
-    private void openLoginScreen(int userChosen) {
+    private void openLoginScreen() {
 
         // Create the second controller, which loads its own FXML file. We pass a reference to this controller
         // using the keyword [this]; that allows the second controller to access the methods contained in here.
@@ -63,7 +66,7 @@ public class RoleScreenController {
             FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("login_screen.fxml"));
             stage.getScene().setRoot(fxmlLoader.load());
             LoginScreenController loginScreenController = fxmlLoader.getController();
-            loginScreenController.initData(stage,userChosen);
+            loginScreenController.initData(stage,user);
         } catch (IOException e) {
             e.printStackTrace();
         }

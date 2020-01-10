@@ -33,10 +33,10 @@ public class Invoice {
     @Override
     public String toString() {
         StringBuilder s = new StringBuilder("Faktura VAT Nr " + invoiceId + ",z dnia " + date + "\n" +
-                "Sprzedawca: " + User.name + "\n" +
-                "       " + User.streetAndNumber + "\n" +
-                "       " + User.postcode + " " + User.city + "\n" +
-                "NIP    " + User.NIP + "\n" +
+                "Sprzedawca: " + Company.name + "\n" +
+                "       " + Company.streetAndNumber + "\n" +
+                "       " + Company.postcode + " " + Company.city + "\n" +
+                "NIP    " + Company.NIP + "\n" +
                 "Nabywca\n" +
                 clientName + "\n" +
                 clientStreetAndNumber + ", " + clientPostCode + " " + clientCity + "\n" +

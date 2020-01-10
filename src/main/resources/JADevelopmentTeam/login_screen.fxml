@@ -16,8 +16,8 @@
             <Font size="27.0" />
          </font>
       </Label>
-      <TextField layoutX="308.0" layoutY="202.0" prefHeight="26.0" prefWidth="285.0" promptText="username" />
-      <PasswordField layoutX="308.0" layoutY="287.0" prefHeight="26.0" prefWidth="285.0" promptText="password" />
+      <TextField fx:id="loginTextField" layoutX="308.0" layoutY="202.0" prefHeight="26.0" prefWidth="285.0" promptText="username" />
+      <PasswordField fx:id="passwordTextField" layoutX="308.0" layoutY="287.0" prefHeight="26.0" prefWidth="285.0" promptText="password" />
       <JFXButton fx:id="loginButton" graphicTextGap="10.0" layoutX="330.0" layoutY="422.0" onAction="#login" prefHeight="26.0" prefWidth="240.0" style="-fx-background-color: white;" text="Login">
          <font>
             <Font size="24.0" />
@@ -32,5 +32,10 @@
             </ImageView>
          </graphic>
       </JFXButton>
+      <Label fx:id="wrongPasswordLabel" layoutX="376.0" layoutY="355.0" text="Wrong Password!" textFill="WHITE" visible="false">
+         <font>
+            <Font size="17.0" />
+         </font>
+      </Label>
    </children>
 </AnchorPane>

@@ -1,5 +1,6 @@
 package JADevelopmentTeam;
 
+import JADevelopmentTeam.mysql.Database;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXListView;
 import javafx.beans.value.ChangeListener;
@@ -8,13 +9,16 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 import javax.swing.text.html.ListView;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class WorkerMenuScreenController  {
+    public Label welcomeMessage;
     Stage stage = null;
     @FXML
     private Pane invoicePane,clientPane;
@@ -24,9 +28,17 @@ public class WorkerMenuScreenController  {
     private JFXButton addInvoiceButton;
     @FXML
     private JFXListView <Invoice>  invoicesListView = new JFXListView<>();
-    public void initData(Stage stage) {
+    ArrayList<Invoice> invoices = new ArrayList<>();
+    Database database;
+    User user = new User();
+    public void initData(Stage stage, Database dataBase,User user) {
+        this.database = dataBase;
+        this.user = user;
         this.stage = stage;
+        welcomeMessage.setText("Welcome \n"+user.name+"!");
     }
+
+
     public void handleMenuButtonAction(javafx.event.ActionEvent event) {
         if(event.getSource()==invoiceMenuButton){
             invoicePane.toFront();

@@ -15,7 +15,7 @@
             <children>
                 <JFXButton fx:id="invoiceMenuButton" buttonType="RAISED" layoutX="1.0" layoutY="117.0" onAction="#handleMenuButtonAction" prefHeight="50.0" prefWidth="250.0" ripplerFill="WHITE" text="Invoices" textAlignment="CENTER" textFill="WHITE" textOverrun="CLIP" />
                 <JFXButton fx:id="clientMenuButton" buttonType="RAISED" graphicTextGap="10.0" layoutX="1.0" layoutY="167.0" onAction="#handleMenuButtonAction" prefHeight="50.0" prefWidth="250.0" ripplerFill="WHITE" text="Clients" textAlignment="RIGHT" textFill="WHITE" textOverrun="CLIP" />
-                <Label layoutX="36.0" layoutY="40.0" text="Welcome, Artur!" textFill="WHITE">
+                <Label fx:id="welcomeMessage" alignment="TOP_CENTER" layoutY="40.0" prefHeight="71.0" prefWidth="250.0" text="Welcome, Artur!" textFill="WHITE">
                     <font>
                         <Font size="22.0" />
                     </font></Label>

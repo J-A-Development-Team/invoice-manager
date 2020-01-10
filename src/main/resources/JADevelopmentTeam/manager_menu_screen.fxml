@@ -22,7 +22,7 @@
                <padding>
                   <Insets right="70.0" />
                </padding></JFXButton>
-                <Label layoutX="36.0" layoutY="40.0" text="Welcome, Artur!" textFill="WHITE">
+                <Label layoutX="36.0" layoutY="40.0" text="Welcome, Artur!" textFill="WHITE" fx:id="welcomeMessage">
                     <font>
                         <Font size="22.0" />
                     </font></Label>
