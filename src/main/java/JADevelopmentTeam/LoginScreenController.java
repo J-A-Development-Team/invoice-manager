@@ -25,11 +25,8 @@ public class LoginScreenController {
     Database database;
     User user = new User();
     private Stage stage = null;
-    // Will hold a reference to the first controller, allowing us to access the methods found there.
     @FXML
     private JFXButton loginButton;
-
-    // Add references to the controls in Layout2.fxml
     public void initData(Stage stage, User user) {
         this.stage = stage;
         this.user = user;
@@ -92,41 +89,14 @@ public class LoginScreenController {
             user.id = loginResult;
             user.name = login;
             try {
-                FXMLLoader fxmlLoader;
-                switch (user.type) {
-                    case admin:
-                        fxmlLoader = new FXMLLoader(App.class.getResource("admin_menu_screen.fxml"));
-
-                        break;
-                    case manager:
-                        fxmlLoader = new FXMLLoader(App.class.getResource("manager_menu_screen.fxml"));
-                        break;
-                    default:
-                        fxmlLoader = new FXMLLoader(App.class.getResource("worker_menu_screen.fxml"));
-                        break;
-
-                }
+                FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("menu_screen.fxml"));
                 stage.getScene().setRoot(fxmlLoader.load());
-                switch (user.type) {
-                    case admin:
-                        AdminMenuScreenController adminMenuScreenController = fxmlLoader.getController();
-                        adminMenuScreenController.initData(stage, database, user);
-                        break;
-                    case manager:
-                        ManagerMenuScreenController managerMenuScreenController = fxmlLoader.getController();
-                        managerMenuScreenController.initData(stage, database, user);
-                        break;
-                    default:
-                        WorkerMenuScreenController workerMenuScreenController = fxmlLoader.getController();
-                        workerMenuScreenController.initData(stage, database, user);
-                        break;
-
-                }
+                MenuScreenController menuScreenController = fxmlLoader.getController();
+                menuScreenController.initData(stage, database, user);
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
-
     }
 
     @FXML

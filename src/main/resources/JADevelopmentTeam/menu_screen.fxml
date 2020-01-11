@@ -6,12 +6,11 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="JADevelopmentTeam.WorkerMenuScreenController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="JADevelopmentTeam.MenuScreenController">
    <children>
-      <AnchorPane prefHeight="600.0" prefWidth="250.0" style="-fx-background-color: #4775ff;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <AnchorPane fx:id="menuSidePane" prefHeight="600.0" prefWidth="250.0" style="-fx-background-color: #0787f0;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <JFXButton fx:id="invoiceMenuButton" buttonType="RAISED" layoutX="1.0" layoutY="117.0" onAction="#handleMenuButtonAction" prefHeight="50.0" prefWidth="250.0" ripplerFill="WHITE" text="Invoices" textAlignment="CENTER" textFill="WHITE" textOverrun="CLIP" />
             <JFXButton fx:id="clientMenuButton" buttonType="RAISED" graphicTextGap="10.0" layoutX="1.0" layoutY="167.0" onAction="#handleMenuButtonAction" prefHeight="50.0" prefWidth="250.0" ripplerFill="WHITE" text="Clients" textAlignment="RIGHT" textFill="WHITE" textOverrun="CLIP" />
@@ -19,7 +18,7 @@
                <font>
                   <Font size="22.0" />
                </font></Label>
-            <JFXButton fx:id="invoiceMenuButton1" buttonType="RAISED" layoutX="2.0" layoutY="538.0" onAction="#handleMenuButtonAction" prefHeight="50.0" prefWidth="250.0" ripplerFill="WHITE" text="Logout" textAlignment="CENTER" textFill="WHITE" textOverrun="CLIP" AnchorPane.bottomAnchor="12.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+            <JFXButton fx:id="logoutButton" buttonType="RAISED" layoutX="2.0" layoutY="538.0" onAction="#handleMenuButtonAction" prefHeight="50.0" prefWidth="250.0" ripplerFill="WHITE" text="Logout" textAlignment="CENTER" textFill="WHITE" textOverrun="CLIP" AnchorPane.bottomAnchor="12.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
             <ImageView blendMode="COLOR_DODGE" fitHeight="40.0" fitWidth="40.0" layoutX="25.0" layoutY="122.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@invoice.png" />
@@ -39,12 +38,16 @@
       </AnchorPane>
       <AnchorPane layoutX="250.0" prefHeight="600.0" prefWidth="650.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="250.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <Pane fx:id="clientPane" prefHeight="600.0" prefWidth="650.0" style="-fx-background-color: Blue;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-            <Pane prefHeight="600.0" prefWidth="650.0" style="-fx-background-color: Green;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-            <AnchorPane fx:id="invoicePane" style="-fx-background-color: white;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <AnchorPane fx:id="clientPane" style="-fx-background-color: white;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <children>
+                  <JFXListView fx:id="clientsListView" layoutY="52.0" prefHeight="549.0" prefWidth="650.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="52.0" />
+                  <JFXButton fx:id="addClientButton" buttonType="RAISED" layoutX="14.0" layoutY="14.0" style="-fx-background-color: white;" text="Add Client" />
+               </children>
+            </AnchorPane>
+            <AnchorPane fx:id="invoicePane" style="-fx-background-color: white;">
                <children>
                   <JFXListView fx:id="invoicesListView" layoutY="52.0" prefHeight="549.0" prefWidth="650.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="52.0" />
-                  <JFXButton fx:id="addInvoiceButton" layoutX="14.0" layoutY="14.0" text="Add Invoice" />
+                  <JFXButton fx:id="addInvoiceButton" buttonType="RAISED" layoutX="14.0" layoutY="14.0" style="-fx-background-color: white;" text="Add Invoice" />
                </children>
             </AnchorPane>
          </children></AnchorPane>
