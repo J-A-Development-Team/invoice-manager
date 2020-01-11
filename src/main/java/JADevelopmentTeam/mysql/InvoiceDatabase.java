@@ -10,6 +10,8 @@ import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 
 public class InvoiceDatabase extends Database {
     private static InvoiceBuilder invoiceBuilder;
@@ -32,6 +34,7 @@ public class InvoiceDatabase extends Database {
         }
         rs.beforeFirst();
         rs.next();
+        Collections.reverse(invoices);
         return invoices;
     }
 
@@ -64,7 +67,7 @@ public class InvoiceDatabase extends Database {
     }
 
     private int lastInvoiceId() throws SQLException {
-        ResultSet rs = connection.createStatement().executeQuery("SELECT MAX(invoice_id) FROM invoice");
+        ResultSet rs = connection.prepareStatement("call get_last_invoice_id()").executeQuery();
         rs.next();
         return rs.getInt(1);
     }

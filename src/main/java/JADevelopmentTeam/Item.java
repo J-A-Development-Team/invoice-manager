@@ -30,6 +30,10 @@ public class Item {
         return taxType;
     }
 
+    public int getAvailableAmount() {
+        return availableAmount;
+    }
+
     @Override
     public String toString() {
         return name+" "+netAmount+" "+taxType+" "+ availableAmount;

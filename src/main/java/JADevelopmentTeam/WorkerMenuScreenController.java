@@ -4,7 +4,6 @@ import JADevelopmentTeam.mysql.Database;
 import JADevelopmentTeam.mysql.InvoiceDatabase;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXListView;
-import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -14,10 +13,8 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
-import javax.swing.text.html.ListView;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
 
 public class WorkerMenuScreenController  {
     public Label welcomeMessage;
@@ -30,6 +27,7 @@ public class WorkerMenuScreenController  {
     private JFXButton addInvoiceButton;
     @FXML
     private JFXListView <Invoice>  invoicesListView = new JFXListView<>();
+
     ObservableList<Invoice> invoices = FXCollections.<Invoice>observableArrayList();
     Database database;
     User user = new User();
@@ -45,6 +43,7 @@ public class WorkerMenuScreenController  {
         InvoiceDatabase invoiceDatabase = new InvoiceDatabase(database.getConnection());
         try {
             invoices.addAll(invoiceDatabase.getAllInvoices());
+            invoicesListView.getItems().addAll(invoices);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -68,23 +67,23 @@ public class WorkerMenuScreenController  {
         RoleScreenController roleScreenController = fxmlLoader.getController();
         roleScreenController.initData(stage);
     }
-    private void addStringToList(){
+    private void addInvoice(){
         Stage stage = new Stage();
         FXMLLoader loader = new FXMLLoader(App.class.getResource("add_invoice_screen.fxml"));
         Scene scene = null;
         try {
             scene = new Scene(loader.load());
+            AddInvoiceScreenController addInvoiceScreenController = loader.getController();
+            addInvoiceScreenController.initData(database,user,invoicesListView);
         } catch (IOException e) {
             e.printStackTrace();
         }
         stage.setScene(scene);
         stage.show();
-       // Invoice invoice = new Invoice();
-       // invoicesListView.getItems().add(invoice);
     }
     @FXML
     private void initialize() {
-        addInvoiceButton.setOnAction(event -> addStringToList());
+        addInvoiceButton.setOnAction(event -> addInvoice());
 
     }
 }

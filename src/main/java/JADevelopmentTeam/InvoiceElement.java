@@ -25,4 +25,9 @@ public class InvoiceElement {
     float netCalculation() {
         return quantity * item.getNetAmount();
     }
+
+    @Override
+    public String toString() {
+        return item.getName()+" "+quantity;
+    }
 }

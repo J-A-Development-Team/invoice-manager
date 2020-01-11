@@ -16,4 +16,9 @@ public class Client {
         this.streetAndNumber = streetAndNumber;
         this.postcode = postcode;
     }
+
+    @Override
+    public String toString() {
+        return name;
+    }
 }

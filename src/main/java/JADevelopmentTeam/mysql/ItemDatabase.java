@@ -8,7 +8,7 @@ import java.sql.*;
 import java.util.ArrayList;
 
 public class ItemDatabase extends Database {
-    ItemDatabase(Connection connection) {
+    public ItemDatabase(Connection connection) {
         super(connection);
     }
 

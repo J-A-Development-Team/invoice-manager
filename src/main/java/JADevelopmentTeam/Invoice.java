@@ -61,6 +61,7 @@ public class Invoice {
         s.append(String.format("%,.2f", fullNet));
         s.append("  brutto: ");
         s.append(String.format("%,.2f", fullGross));
+        s.append("\n-------------------------------------------");
         return s.toString();
     }
 
