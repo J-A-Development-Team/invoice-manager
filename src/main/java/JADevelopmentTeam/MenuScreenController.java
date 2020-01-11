@@ -6,18 +6,23 @@ import JADevelopmentTeam.mysql.InvoiceDatabase;
 import JADevelopmentTeam.mysql.ItemDatabase;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXListView;
+import com.jfoenix.controls.JFXToggleButton;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Optional;
 
 public class MenuScreenController {
     public JFXButton itemMenuButton;
@@ -25,14 +30,17 @@ public class MenuScreenController {
     public JFXButton logoutButton;
     public AnchorPane menuSidePane;
     public JFXButton addClientButton;
-    public Pane invoicePane,clientPane;
-    public JFXButton invoiceMenuButton,clientMenuButton;
+    public Pane invoicePane, clientPane;
+    public JFXButton invoiceMenuButton, clientMenuButton;
     public JFXButton addInvoiceButton;
     public AnchorPane itemPane;
     public JFXButton addItemButton;
-    public JFXListView <Client> clientsListView = new JFXListView<>();
-    public JFXListView <Item> itemsListView = new JFXListView<>();
-    public JFXListView <Invoice>  invoicesListView = new JFXListView<>();
+    public JFXListView<Client> clientsListView = new JFXListView<>();
+    public JFXListView<Item> itemsListView = new JFXListView<>();
+    public JFXListView<Invoice> invoicesListView = new JFXListView<>();
+    public JFXButton editAvailableAmountButton;
+    public JFXButton editItemCostButton;
+    public JFXToggleButton showOnlyAvailableItemsToggleButton;
     Database database;
     InvoiceDatabase invoiceDatabase;
     ClientDatabase clientDatabase;
@@ -43,7 +51,7 @@ public class MenuScreenController {
     User user = new User();
     Stage stage = null;
 
-    public void initData(Stage stage, Database dataBase,User user) {
+    public void initData(Stage stage, Database dataBase, User user) {
         this.database = dataBase;
         this.user = user;
         this.stage = stage;
@@ -52,7 +60,8 @@ public class MenuScreenController {
         itemsDatabase = new ItemDatabase(database.getConnection());
         initializeWithData();
     }
-    private void configureForUserType(){
+
+    private void configureForUserType() {
         switch (user.type) {
             case admin:
                 menuSidePane.setStyle("-fx-background-color:  #c9160c");
@@ -63,36 +72,40 @@ public class MenuScreenController {
             case worker:
                 menuSidePane.setStyle("-fx-background-color:  #0787f0");
                 addItemButton.setVisible(false);
+                editItemCostButton.setVisible(false);
+                editAvailableAmountButton.setVisible(false);
                 break;
         }
     }
-    private void initializeWithData(){
-        welcomeMessage.setText("Welcome \n"+user.name+"!");
+
+    private void initializeWithData() {
+        welcomeMessage.setText("Welcome \n" + user.name + "!");
         configureForUserType();
         try {
             invoices.addAll(invoiceDatabase.getAllInvoices());
             invoicesListView.getItems().addAll(invoices);
             clients.addAll(clientDatabase.getAllClients());
             clientsListView.getItems().addAll(clients);
-            items.addAll(itemsDatabase.getAllItems());
-            itemsListView.getItems().addAll(items);
+            reloadItems();
             invoicePane.toFront();
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
+
     public void handleMenuButtonAction(javafx.event.ActionEvent event) {
-        if(event.getSource()==invoiceMenuButton){
+        if (event.getSource() == invoiceMenuButton) {
             invoicePane.toFront();
-        }else if(event.getSource() == clientMenuButton) {
+        } else if (event.getSource() == clientMenuButton) {
             clientPane.toFront();
-        }else if(event.getSource() == itemMenuButton){
+        } else if (event.getSource() == itemMenuButton) {
             itemPane.toFront();
-        }else{
+        } else {
             logout();
         }
     }
-    private void logout(){
+
+    private void logout() {
         FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("role_screen.fxml"));
         try {
             stage.getScene().setRoot(fxmlLoader.load());
@@ -102,20 +115,22 @@ public class MenuScreenController {
         RoleScreenController roleScreenController = fxmlLoader.getController();
         roleScreenController.initData(stage);
     }
-    private void addInvoice(){
+
+    private void addInvoice() {
         Stage stage = new Stage();
         FXMLLoader loader = new FXMLLoader(App.class.getResource("add_invoice_screen.fxml"));
         Scene scene = null;
         try {
             scene = new Scene(loader.load());
             AddInvoiceScreenController addInvoiceScreenController = loader.getController();
-            addInvoiceScreenController.initData(database,user,invoicesListView);
+            addInvoiceScreenController.initData(database, user, invoicesListView);
         } catch (IOException e) {
             e.printStackTrace();
         }
         stage.setScene(scene);
         stage.show();
     }
+
     private void addClient() {
         Stage stage = new Stage();
         FXMLLoader loader = new FXMLLoader(App.class.getResource("add_client_screen.fxml"));
@@ -123,33 +138,152 @@ public class MenuScreenController {
         try {
             scene = new Scene(loader.load());
             AddClientScreenController addClientScreenController = loader.getController();
-            addClientScreenController.initData(database,user,clientsListView);
+            addClientScreenController.initData(database, user, clientsListView);
         } catch (IOException e) {
             e.printStackTrace();
         }
         stage.setScene(scene);
         stage.show();
     }
-    private void addItem(){
+
+    private void addItem() {
         Stage stage = new Stage();
         FXMLLoader loader = new FXMLLoader(App.class.getResource("add_item_screen.fxml"));
         Scene scene = null;
         try {
             scene = new Scene(loader.load());
             AddItemScreenController addItemScreenController = loader.getController();
-            addItemScreenController.initData(database,user,itemsListView);
+            addItemScreenController.initData(database, user, itemsListView);
         } catch (IOException e) {
             e.printStackTrace();
         }
         stage.setScene(scene);
         stage.show();
     }
+
+    private void editItemCost() {
+        Item itemToChangePrice = itemsListView.getSelectionModel().getSelectedItem();
+        Dialog<Float> dialog = new Dialog<>();
+        dialog.setTitle("Enter new Cost");
+        ButtonType confirmButtonType = new ButtonType("Change cost", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(confirmButtonType, ButtonType.CANCEL);
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(20, 150, 10, 10));
+        TextField newCostTextField = new TextField();
+        newCostTextField.setText(String.valueOf(itemToChangePrice.getNetAmount()));
+        grid.add(newCostTextField, 0, 0);
+        Node confirmButton = dialog.getDialogPane().lookupButton(confirmButtonType);
+        confirmButton.setDisable(true);
+        newCostTextField.textProperty().addListener((observable, oldValue, newValue) -> {
+            try {
+                confirmButton.setDisable(newValue.trim().isEmpty() || Float.parseFloat(newValue) < 0);
+            } catch (NumberFormatException ex) {
+                confirmButton.setDisable(true);
+            }
+        });
+        dialog.getDialogPane().setContent(grid);
+        dialog.setResultConverter(dialogButton -> {
+            if (dialogButton == confirmButtonType) {
+                try {
+                    return Float.parseFloat(newCostTextField.getText());
+                } catch (NumberFormatException ex) {
+                    return null;
+                }
+            }
+            return null;
+        });
+
+        Optional<Float> result = dialog.showAndWait();
+
+        result.ifPresent(newCost -> {
+            try {
+                if (!newCost.equals(itemToChangePrice.getNetAmount())) {
+
+                    itemsDatabase.editItemCost(itemToChangePrice.getId(), newCost);
+                    reloadItems();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
+    private void editAvailableAmount() {
+        Item itemToChangeAvailableAmount = itemsListView.getSelectionModel().getSelectedItem();
+        Dialog<Float> dialog = new Dialog<>();
+        dialog.setTitle("Enter new Amount");
+        ButtonType confirmButtonType = new ButtonType("Change amount", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(confirmButtonType, ButtonType.CANCEL);
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(20, 150, 10, 10));
+        TextField newAmountTextField = new TextField();
+        newAmountTextField.setText(String.valueOf(itemToChangeAvailableAmount.getAvailableAmount()));
+        grid.add(newAmountTextField, 0, 0);
+        Node confirmButton = dialog.getDialogPane().lookupButton(confirmButtonType);
+        confirmButton.setDisable(true);
+        newAmountTextField.textProperty().addListener((observable, oldValue, newValue) -> {
+            try {
+                confirmButton.setDisable(newValue.trim().isEmpty() || Float.parseFloat(newValue) < 0);
+            } catch (NumberFormatException ex) {
+                confirmButton.setDisable(true);
+            }
+        });
+        dialog.getDialogPane().setContent(grid);
+        dialog.setResultConverter(dialogButton -> {
+            if (dialogButton == confirmButtonType) {
+                try {
+                    return Float.parseFloat(newAmountTextField.getText());
+                } catch (NumberFormatException ex) {
+                    return null;
+                }
+            }
+            return null;
+        });
+
+        Optional<Float> result = dialog.showAndWait();
+
+        result.ifPresent(newAmount -> {
+            try {
+                if (newAmount != itemToChangeAvailableAmount.getAvailableAmount()) {
+                    itemsDatabase.editAvailableAmount(itemToChangeAvailableAmount.getId(), newAmount);
+                    reloadItems();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
+    private void reloadItems() {
+        System.out.println("reloading");
+        items.clear();
+        itemsListView.getItems().clear();
+        try {
+            items.addAll(itemsDatabase.getAllItems());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        if (showOnlyAvailableItemsToggleButton.selectedProperty().get()) {
+            for (int i = items.size() - 1; i >= 0; i--) {
+                if (items.get(i).getAvailableAmount() == 0) {
+                    items.remove(i);
+                }
+            }
+        }
+        itemsListView.getItems().addAll(items);
+    }
+
     @FXML
     private void initialize() {
         addInvoiceButton.setOnAction(event -> addInvoice());
         addClientButton.setOnAction(event -> addClient());
         addItemButton.setOnAction(event -> addItem());
+        editAvailableAmountButton.setOnAction(event -> editAvailableAmount());
+        editItemCostButton.setOnAction(event -> editItemCost());
+        showOnlyAvailableItemsToggleButton.setOnAction(event -> reloadItems());
     }
-
-
 }

@@ -36,11 +36,14 @@ public class ItemDatabase extends Database {
         preparedStatement = connection.prepareStatement("call edit_available_amount(?,?)");
         preparedStatement.setInt(1,id);
         preparedStatement.setFloat(2,availableAmount);
+        preparedStatement.execute();
+
     }
     public void editItemCost(int id,float newCost) throws SQLException {
         preparedStatement = connection.prepareStatement("call edit_item_cost(?,?)");
         preparedStatement.setInt(1,id);
         preparedStatement.setFloat(2,newCost);
+        preparedStatement.execute();
     }
     public ArrayList<Item> getAllItems() throws SQLException {
         ArrayList<Item> items = new ArrayList<>();
