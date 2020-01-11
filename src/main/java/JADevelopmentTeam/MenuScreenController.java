@@ -71,11 +71,13 @@ public class MenuScreenController {
             case manager:
                 menuSidePane.setStyle("-fx-background-color:  #3ed111");
                 deleteItemButton.setVisible(false);
+                deleteInvoiceButton.setVisible(false);
                 break;
             case worker:
                 menuSidePane.setStyle("-fx-background-color:  #0787f0");
                 addItemButton.setVisible(false);
                 editItemCostButton.setVisible(false);
+                deleteInvoiceButton.setVisible(false);
                 editAvailableAmountButton.setVisible(false);
                 deleteItemButton.setVisible(false);
                 break;
