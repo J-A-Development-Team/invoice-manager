@@ -4,12 +4,29 @@ public class User {
     Type type;
     int id;
     String name;
-    enum Type{
+    public enum Type{
         admin,manager,worker
     }
     String password;
 
+    public User(Type type, int id, String name, String password) {
+        this.type = type;
+        this.id = id;
+        this.name = name;
+        this.password = password;
+    }
+    public User(){};
 
+    public static Type stringToType(String type){
+        switch (type){
+            case "admin":
+                return Type.admin;
+            case "manager":
+                return Type.manager;
+            default:
+                return Type.worker;
+        }
+    }
 
     public Type getType() {
         return type;
