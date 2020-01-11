@@ -41,6 +41,8 @@ public class MenuScreenController {
     public JFXButton editAvailableAmountButton;
     public JFXButton editItemCostButton;
     public JFXToggleButton showOnlyAvailableItemsToggleButton;
+    public JFXButton deleteItemButton;
+    public JFXButton deleteInvoiceButton;
     Database database;
     InvoiceDatabase invoiceDatabase;
     ClientDatabase clientDatabase;
@@ -68,12 +70,14 @@ public class MenuScreenController {
                 break;
             case manager:
                 menuSidePane.setStyle("-fx-background-color:  #3ed111");
+                deleteItemButton.setVisible(false);
                 break;
             case worker:
                 menuSidePane.setStyle("-fx-background-color:  #0787f0");
                 addItemButton.setVisible(false);
                 editItemCostButton.setVisible(false);
                 editAvailableAmountButton.setVisible(false);
+                deleteItemButton.setVisible(false);
                 break;
         }
     }
@@ -82,8 +86,7 @@ public class MenuScreenController {
         welcomeMessage.setText("Welcome \n" + user.name + "!");
         configureForUserType();
         try {
-            invoices.addAll(invoiceDatabase.getAllInvoices());
-            invoicesListView.getItems().addAll(invoices);
+            reloadInvoices();
             clients.addAll(clientDatabase.getAllClients());
             clientsListView.getItems().addAll(clients);
             reloadItems();
@@ -257,7 +260,16 @@ public class MenuScreenController {
             }
         });
     }
-
+    private void reloadInvoices() {
+        invoices.clear();
+        invoicesListView.getItems().clear();
+        try {
+            invoices.addAll(invoiceDatabase.getAllInvoices());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        invoicesListView.getItems().addAll(invoices);
+    }
     private void reloadItems() {
         System.out.println("reloading");
         items.clear();
@@ -276,12 +288,35 @@ public class MenuScreenController {
         }
         itemsListView.getItems().addAll(items);
     }
-
+    private void deleteItem(){
+        Item itemToDelete = itemsListView.getSelectionModel().getSelectedItem();
+        if(itemToDelete != null) {
+            try {
+                itemsDatabase.deleteItem(itemToDelete.getId());
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            reloadItems();
+        }
+    }
+    private void deleteInvoice(){
+        Invoice invoiceToDelete = invoicesListView.getSelectionModel().getSelectedItem();
+        if(invoiceToDelete != null){
+            try {
+                invoiceDatabase.deleteInvoice(invoiceToDelete.getInvoiceId());
+                reloadInvoices();
+            }catch (SQLException e){
+                e.printStackTrace();
+            }
+        }
+    }
     @FXML
     private void initialize() {
         addInvoiceButton.setOnAction(event -> addInvoice());
         addClientButton.setOnAction(event -> addClient());
         addItemButton.setOnAction(event -> addItem());
+        deleteItemButton.setOnAction(event -> deleteItem());
+        deleteInvoiceButton.setOnAction(event -> deleteInvoice());
         editAvailableAmountButton.setOnAction(event -> editAvailableAmount());
         editItemCostButton.setOnAction(event -> editItemCost());
         showOnlyAvailableItemsToggleButton.setOnAction(event -> reloadItems());

@@ -51,19 +51,21 @@
                   <JFXButton fx:id="addClientButton" buttonType="RAISED" layoutX="14.0" layoutY="14.0" style="-fx-background-color: white;" text="Add Client" />
                </children>
             </AnchorPane>
-            <AnchorPane fx:id="invoicePane" style="-fx-background-color: white;">
-               <children>
-                  <JFXListView fx:id="invoicesListView" layoutY="52.0" prefHeight="549.0" prefWidth="650.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="52.0" />
-                  <JFXButton fx:id="addInvoiceButton" buttonType="RAISED" layoutX="14.0" layoutY="14.0" style="-fx-background-color: white;" text="Add Invoice" />
-               </children>
-            </AnchorPane>
             <AnchorPane fx:id="itemPane" style="-fx-background-color: white;">
                <children>
                   <JFXListView fx:id="itemsListView" layoutY="52.0" prefHeight="549.0" prefWidth="650.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="52.0" />
                   <JFXButton fx:id="addItemButton" buttonType="RAISED" layoutX="14.0" layoutY="14.0" style="-fx-background-color: white;" text="Add Item" />
                   <JFXButton fx:id="editItemCostButton" buttonType="RAISED" layoutX="108.0" layoutY="14.0" style="-fx-background-color: white;" text="Edit Cost" />
-                  <JFXButton fx:id="editAvailableAmountButton" buttonType="RAISED" layoutX="206.0" layoutY="14.0" style="-fx-background-color: white;" text="Edit Available amount" />
+                  <JFXButton fx:id="editAvailableAmountButton" buttonType="RAISED" layoutX="206.0" layoutY="14.0" style="-fx-background-color: white;" text="Edit Amount" />
                   <JFXToggleButton fx:id="showOnlyAvailableItemsToggleButton" layoutX="412.0" layoutY="-3.0" selected="true" text="Show only available Items" />
+                  <JFXButton fx:id="deleteItemButton" buttonType="RAISED" layoutX="319.0" layoutY="14.0" style="-fx-background-color: white;" text="Delete Item" />
+               </children>
+            </AnchorPane>
+            <AnchorPane fx:id="invoicePane" style="-fx-background-color: white;">
+               <children>
+                  <JFXListView fx:id="invoicesListView" layoutY="52.0" prefHeight="549.0" prefWidth="650.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="52.0" />
+                  <JFXButton fx:id="addInvoiceButton" buttonType="RAISED" layoutX="14.0" layoutY="14.0" style="-fx-background-color: white;" text="Add Invoice" />
+                  <JFXButton fx:id="deleteInvoiceButton" buttonType="RAISED" layoutX="123.0" layoutY="14.0" style="-fx-background-color: white;" text="Delete Invoice" />
                </children>
             </AnchorPane>
          </children></AnchorPane>
