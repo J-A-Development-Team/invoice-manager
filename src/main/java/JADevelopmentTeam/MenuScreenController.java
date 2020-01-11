@@ -1,10 +1,8 @@
 package JADevelopmentTeam;
 
-import JADevelopmentTeam.mysql.ClientDatabase;
-import JADevelopmentTeam.mysql.Database;
-import JADevelopmentTeam.mysql.InvoiceDatabase;
-import JADevelopmentTeam.mysql.ItemDatabase;
+import JADevelopmentTeam.mysql.*;
 import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXListView;
 import com.jfoenix.controls.JFXToggleButton;
 import javafx.collections.FXCollections;
@@ -38,18 +36,26 @@ public class MenuScreenController {
     public JFXListView<Client> clientsListView = new JFXListView<>();
     public JFXListView<Item> itemsListView = new JFXListView<>();
     public JFXListView<Invoice> invoicesListView = new JFXListView<>();
+    public JFXListView <User> usersListView = new JFXListView<>();
     public JFXButton editAvailableAmountButton;
     public JFXButton editItemCostButton;
     public JFXToggleButton showOnlyAvailableItemsToggleButton;
     public JFXButton deleteItemButton;
     public JFXButton deleteInvoiceButton;
+    public JFXButton addUserButton;
+    public JFXButton editUserButton;
+    public AnchorPane usersPane;
+    public JFXButton userMenuButton;
     Database database;
     InvoiceDatabase invoiceDatabase;
     ClientDatabase clientDatabase;
     ItemDatabase itemsDatabase;
+    AdminDatabase adminDatabase;
     ObservableList<Invoice> invoices = FXCollections.<Invoice>observableArrayList();
     ObservableList<Client> clients = FXCollections.<Client>observableArrayList();
     ObservableList<Item> items = FXCollections.<Item>observableArrayList();
+    ObservableList<User> users = FXCollections.<User>observableArrayList();
+
     User user = new User();
     Stage stage = null;
 
@@ -60,6 +66,7 @@ public class MenuScreenController {
         invoiceDatabase = new InvoiceDatabase(database.getConnection());
         clientDatabase = new ClientDatabase(database.getConnection());
         itemsDatabase = new ItemDatabase(database.getConnection());
+        adminDatabase = new AdminDatabase(database.getConnection());
         initializeWithData();
     }
 
@@ -92,6 +99,9 @@ public class MenuScreenController {
             clients.addAll(clientDatabase.getAllClients());
             clientsListView.getItems().addAll(clients);
             reloadItems();
+            if(user.type == User.Type.admin) {
+                reloadUsers();
+            }
             invoicePane.toFront();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -105,6 +115,8 @@ public class MenuScreenController {
             clientPane.toFront();
         } else if (event.getSource() == itemMenuButton) {
             itemPane.toFront();
+        }else if( event.getSource()== userMenuButton){
+            usersPane.toFront();
         } else {
             logout();
         }
@@ -294,6 +306,16 @@ public class MenuScreenController {
         }
         itemsListView.getItems().addAll(items);
     }
+    private void reloadUsers() {
+        users.clear();
+        usersListView.getItems().clear();
+        try {
+            users.addAll(adminDatabase.getAllUsers());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        usersListView.getItems().addAll(users);
+    }
     private void deleteItem(){
         Item itemToDelete = itemsListView.getSelectionModel().getSelectedItem();
         if(itemToDelete != null) {
@@ -315,6 +337,12 @@ public class MenuScreenController {
                 e.printStackTrace();
             }
         }
+    }
+    private void addUser(){
+
+    }
+    private void editUser(){
+
     }
     @FXML
     private void initialize() {
