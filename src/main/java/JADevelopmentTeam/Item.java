@@ -4,14 +4,20 @@ public class Item {
     private final String name;
     private final Float netAmount;
     private final TaxManager.taxType taxType;
+    private final String description;
     private final int id;
-    private final int availableAmount;
-    public Item(String name, Float netAmount, TaxManager.taxType taxType, int id, int availableAmount) {
+    private final float availableAmount;
+    public Item(String name, Float netAmount, TaxManager.taxType taxType, String description, int id, float availableAmount) {
         this.name = name;
         this.netAmount = netAmount;
         this.taxType = taxType;
+        this.description = description;
         this.id = id;
         this.availableAmount = availableAmount;
+    }
+
+    public String getDescription() {
+        return description;
     }
 
     public int getId() {
@@ -30,7 +36,7 @@ public class Item {
         return taxType;
     }
 
-    public int getAvailableAmount() {
+    public float getAvailableAmount() {
         return availableAmount;
     }
 

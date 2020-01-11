@@ -34,6 +34,12 @@
                   <Image url="@logout.png" />
                </image>
             </ImageView>
+            <JFXButton fx:id="itemMenuButton" buttonType="RAISED" layoutY="217.0" onAction="#handleMenuButtonAction" prefHeight="50.0" prefWidth="250.0" ripplerFill="WHITE" text="Items" textAlignment="CENTER" textFill="WHITE" textOverrun="CLIP" />
+            <ImageView blendMode="COLOR_DODGE" fitHeight="40.0" fitWidth="40.0" layoutX="25.0" layoutY="222.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@items.png" />
+               </image>
+            </ImageView>
          </children>
       </AnchorPane>
       <AnchorPane layoutX="250.0" prefHeight="600.0" prefWidth="650.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="250.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -48,6 +54,12 @@
                <children>
                   <JFXListView fx:id="invoicesListView" layoutY="52.0" prefHeight="549.0" prefWidth="650.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="52.0" />
                   <JFXButton fx:id="addInvoiceButton" buttonType="RAISED" layoutX="14.0" layoutY="14.0" style="-fx-background-color: white;" text="Add Invoice" />
+               </children>
+            </AnchorPane>
+            <AnchorPane fx:id="itemPane" style="-fx-background-color: white;">
+               <children>
+                  <JFXListView fx:id="itemsListView" layoutY="52.0" prefHeight="549.0" prefWidth="650.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="52.0" />
+                  <JFXButton fx:id="addItemButton" buttonType="RAISED" layoutX="14.0" layoutY="14.0" style="-fx-background-color: white;" text="Add Item" />
                </children>
             </AnchorPane>
          </children></AnchorPane>

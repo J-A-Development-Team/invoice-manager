@@ -1,6 +1,5 @@
 package JADevelopmentTeam.mysql;
 
-import JADevelopmentTeam.InvoiceElement;
 import JADevelopmentTeam.Item;
 import JADevelopmentTeam.TaxManager;
 
@@ -17,15 +16,15 @@ public class ItemDatabase extends Database {
     }
 
     public static Item resultToItem(ResultSet rs) throws SQLException {
-        return new Item(rs.getString("name"),rs.getFloat("cost"), TaxManager.stringToTax(rs.getString("tax")),rs.getInt("item_id"), rs.getInt("available_amount"));
+        return new Item(rs.getString("name"),rs.getFloat("cost"), TaxManager.stringToTax(rs.getString("tax")), rs.getString("description"), rs.getInt("item_id"), rs.getInt("available_amount"));
     }
-    public void add_item(String name,TaxManager.taxType taxType,String description,Float cost,float availableAmount) throws SQLException {
+    public void add_item(Item item) throws SQLException {
         preparedStatement = connection.prepareStatement("call add_item (?,?,?,?,?)");
-        preparedStatement.setString(1,name);
-        preparedStatement.setString(3,description);
-        preparedStatement.setString(2,TaxManager.taxToString(taxType));
-        preparedStatement.setFloat(4,cost);
-        preparedStatement.setFloat(5,availableAmount);
+        preparedStatement.setString(1,item.getName());
+        preparedStatement.setString(3,item.getDescription());
+        preparedStatement.setString(2,TaxManager.taxToString(item.getTaxType()));
+        preparedStatement.setFloat(4,item.getNetAmount());
+        preparedStatement.setFloat(5,item.getAvailableAmount());
         preparedStatement.executeUpdate();
     }
     public void deleteItem(int id) throws SQLException {

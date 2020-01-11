@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXComboBox?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox alignment="TOP_CENTER" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="JADevelopmentTeam.AddItemScreenController">
+    <children>
+        <TextField fx:id="itemNameTextField" prefHeight="34.0" prefWidth="559.0" promptText="Items name">
+            <VBox.margin>
+                <Insets left="30.0" right="30.0" top="30.0" />
+            </VBox.margin>
+        </TextField>
+        <TextField fx:id="itemDescriptionTextField" prefHeight="34.0" prefWidth="559.0" promptText="Items description">
+            <VBox.margin>
+                <Insets left="30.0" right="30.0" top="30.0" />
+            </VBox.margin>
+        </TextField>
+      <JFXComboBox fx:id="taxTypeComboBox" prefHeight="56.0" prefWidth="618.0">
+         <padding>
+            <Insets left="30.0" right="30.0" top="30.0" />
+         </padding>
+      </JFXComboBox>
+        <TextField fx:id="priceTextField" prefHeight="34.0" prefWidth="559.0" promptText="Items Price">
+            <VBox.margin>
+                <Insets left="30.0" right="30.0" top="30.0" />
+            </VBox.margin>
+        </TextField>
+        <TextField fx:id="availableAmountTextField" prefHeight="34.0" prefWidth="559.0" promptText="Available Amount">
+            <VBox.margin>
+                <Insets bottom="30.0" left="30.0" right="30.0" top="30.0" />
+            </VBox.margin>
+        </TextField>
+        <JFXButton fx:id="addItemButton" buttonType="RAISED" disable="true" prefHeight="60.0" prefWidth="438.0" style="-fx-background-color: white;" text="Add Item">
+            <font>
+                <Font name="MathJax_Caligraphic-Bold" size="31.0" />
+            </font>
+            <VBox.margin>
+                <Insets bottom="30.0" />
+            </VBox.margin>
+        </JFXButton>
+    </children>
+</VBox>

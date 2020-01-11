@@ -3,6 +3,7 @@ package JADevelopmentTeam;
 import JADevelopmentTeam.mysql.ClientDatabase;
 import JADevelopmentTeam.mysql.Database;
 import JADevelopmentTeam.mysql.InvoiceDatabase;
+import JADevelopmentTeam.mysql.ItemDatabase;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXListView;
 import javafx.collections.FXCollections;
@@ -19,38 +20,39 @@ import java.io.IOException;
 import java.sql.SQLException;
 
 public class MenuScreenController {
+    public JFXButton itemMenuButton;
     public Label welcomeMessage;
     public JFXButton logoutButton;
-    public JFXListView <Client> clientsListView = new JFXListView<>();
     public AnchorPane menuSidePane;
-    ObservableList<Client> clients = FXCollections.<Client>observableArrayList();
-
     public JFXButton addClientButton;
-    Stage stage = null;
-    @FXML
-    private Pane invoicePane,clientPane;
-    @FXML
-    private JFXButton invoiceMenuButton,clientMenuButton;
-    @FXML
-    private JFXButton addInvoiceButton;
-    @FXML
-    private JFXListView <Invoice>  invoicesListView = new JFXListView<>();
+    public Pane invoicePane,clientPane;
+    public JFXButton invoiceMenuButton,clientMenuButton;
+    public JFXButton addInvoiceButton;
+    public AnchorPane itemPane;
+    public JFXButton addItemButton;
+    public JFXListView <Client> clientsListView = new JFXListView<>();
+    public JFXListView <Item> itemsListView = new JFXListView<>();
+    public JFXListView <Invoice>  invoicesListView = new JFXListView<>();
+    Database database;
     InvoiceDatabase invoiceDatabase;
     ClientDatabase clientDatabase;
+    ItemDatabase itemsDatabase;
     ObservableList<Invoice> invoices = FXCollections.<Invoice>observableArrayList();
-    Database database;
+    ObservableList<Client> clients = FXCollections.<Client>observableArrayList();
+    ObservableList<Item> items = FXCollections.<Item>observableArrayList();
     User user = new User();
+    Stage stage = null;
+
     public void initData(Stage stage, Database dataBase,User user) {
         this.database = dataBase;
         this.user = user;
         this.stage = stage;
         invoiceDatabase = new InvoiceDatabase(database.getConnection());
         clientDatabase = new ClientDatabase(database.getConnection());
+        itemsDatabase = new ItemDatabase(database.getConnection());
         initializeWithData();
     }
-
-    private void initializeWithData(){
-        welcomeMessage.setText("Welcome \n"+user.name+"!");
+    private void configureForUserType(){
         switch (user.type) {
             case admin:
                 menuSidePane.setStyle("-fx-background-color:  #c9160c");
@@ -60,13 +62,20 @@ public class MenuScreenController {
                 break;
             case worker:
                 menuSidePane.setStyle("-fx-background-color:  #0787f0");
+                addItemButton.setVisible(false);
                 break;
         }
+    }
+    private void initializeWithData(){
+        welcomeMessage.setText("Welcome \n"+user.name+"!");
+        configureForUserType();
         try {
             invoices.addAll(invoiceDatabase.getAllInvoices());
             invoicesListView.getItems().addAll(invoices);
             clients.addAll(clientDatabase.getAllClients());
             clientsListView.getItems().addAll(clients);
+            items.addAll(itemsDatabase.getAllItems());
+            itemsListView.getItems().addAll(items);
             invoicePane.toFront();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -75,8 +84,10 @@ public class MenuScreenController {
     public void handleMenuButtonAction(javafx.event.ActionEvent event) {
         if(event.getSource()==invoiceMenuButton){
             invoicePane.toFront();
-        }else if(event.getSource() == clientMenuButton){
+        }else if(event.getSource() == clientMenuButton) {
             clientPane.toFront();
+        }else if(event.getSource() == itemMenuButton){
+            itemPane.toFront();
         }else{
             logout();
         }
@@ -119,10 +130,25 @@ public class MenuScreenController {
         stage.setScene(scene);
         stage.show();
     }
+    private void addItem(){
+        Stage stage = new Stage();
+        FXMLLoader loader = new FXMLLoader(App.class.getResource("add_item_screen.fxml"));
+        Scene scene = null;
+        try {
+            scene = new Scene(loader.load());
+            AddItemScreenController addItemScreenController = loader.getController();
+            addItemScreenController.initData(database,user,itemsListView);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        stage.setScene(scene);
+        stage.show();
+    }
     @FXML
     private void initialize() {
         addInvoiceButton.setOnAction(event -> addInvoice());
         addClientButton.setOnAction(event -> addClient());
+        addItemButton.setOnAction(event -> addItem());
     }
 
 
