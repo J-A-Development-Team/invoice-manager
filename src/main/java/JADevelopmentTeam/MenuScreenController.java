@@ -2,7 +2,6 @@ package JADevelopmentTeam;
 
 import JADevelopmentTeam.mysql.*;
 import com.jfoenix.controls.JFXButton;
-import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXListView;
 import com.jfoenix.controls.JFXToggleButton;
 import javafx.collections.FXCollections;
@@ -17,6 +16,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import javafx.util.Pair;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -36,7 +36,7 @@ public class MenuScreenController {
     public JFXListView<Client> clientsListView = new JFXListView<>();
     public JFXListView<Item> itemsListView = new JFXListView<>();
     public JFXListView<Invoice> invoicesListView = new JFXListView<>();
-    public JFXListView <User> usersListView = new JFXListView<>();
+    public JFXListView<User> usersListView = new JFXListView<>();
     public JFXButton editAvailableAmountButton;
     public JFXButton editItemCostButton;
     public JFXToggleButton showOnlyAvailableItemsToggleButton;
@@ -101,7 +101,7 @@ public class MenuScreenController {
             clients.addAll(clientDatabase.getAllClients());
             clientsListView.getItems().addAll(clients);
             reloadItems();
-            if(user.type == User.Type.admin) {
+            if (user.type == User.Type.admin) {
                 reloadUsers();
             }
             invoicePane.toFront();
@@ -117,7 +117,7 @@ public class MenuScreenController {
             clientPane.toFront();
         } else if (event.getSource() == itemMenuButton) {
             itemPane.toFront();
-        }else if( event.getSource()== userMenuButton){
+        } else if (event.getSource() == userMenuButton) {
             usersPane.toFront();
         } else {
             logout();
@@ -182,7 +182,7 @@ public class MenuScreenController {
 
     private void editItemCost() {
         Item itemToChangePrice = itemsListView.getSelectionModel().getSelectedItem();
-        if(itemToChangePrice!=null) {
+        if (itemToChangePrice != null) {
             Dialog<Float> dialog = new Dialog<>();
             dialog.setTitle("Enter new Cost");
             ButtonType confirmButtonType = new ButtonType("Change cost", ButtonBar.ButtonData.OK_DONE);
@@ -233,7 +233,7 @@ public class MenuScreenController {
 
     private void editAvailableAmount() {
         Item itemToChangeAvailableAmount = itemsListView.getSelectionModel().getSelectedItem();
-        if(itemToChangeAvailableAmount!=null) {
+        if (itemToChangeAvailableAmount != null) {
             Dialog<Float> dialog = new Dialog<>();
             dialog.setTitle("Enter new Amount");
             ButtonType confirmButtonType = new ButtonType("Change amount", ButtonBar.ButtonData.OK_DONE);
@@ -280,6 +280,7 @@ public class MenuScreenController {
             });
         }
     }
+
     private void reloadInvoices() {
         invoices.clear();
         invoicesListView.getItems().clear();
@@ -290,6 +291,7 @@ public class MenuScreenController {
         }
         invoicesListView.getItems().addAll(invoices);
     }
+
     private void reloadItems() {
         System.out.println("reloading");
         items.clear();
@@ -308,6 +310,7 @@ public class MenuScreenController {
         }
         itemsListView.getItems().addAll(items);
     }
+
     private void reloadUsers() {
         users.clear();
         usersListView.getItems().clear();
@@ -318,9 +321,10 @@ public class MenuScreenController {
         }
         usersListView.getItems().addAll(users);
     }
-    private void deleteItem(){
+
+    private void deleteItem() {
         Item itemToDelete = itemsListView.getSelectionModel().getSelectedItem();
-        if(itemToDelete != null) {
+        if (itemToDelete != null) {
             try {
                 itemsDatabase.deleteItem(itemToDelete.getId());
             } catch (SQLException e) {
@@ -329,23 +333,87 @@ public class MenuScreenController {
             reloadItems();
         }
     }
-    private void deleteInvoice(){
+
+    private void deleteInvoice() {
         Invoice invoiceToDelete = invoicesListView.getSelectionModel().getSelectedItem();
-        if(invoiceToDelete != null){
+        if (invoiceToDelete != null) {
             try {
                 invoiceDatabase.deleteInvoice(invoiceToDelete.getInvoiceId());
                 reloadInvoices();
-            }catch (SQLException e){
+            } catch (SQLException e) {
                 e.printStackTrace();
             }
         }
     }
-    private void addUser(){
 
+    private void addUser() {
+        Stage stage = new Stage();
+        FXMLLoader loader = new FXMLLoader(App.class.getResource("add_user_screen.fxml"));
+        Scene scene = null;
+        try {
+            scene = new Scene(loader.load());
+            AddUserScreenController addUserScreenController = loader.getController();
+            addUserScreenController.initData(database, user, usersListView);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        stage.setScene(scene);
+        stage.show();
     }
-    private void editUser(){
 
+    private void editUser() {
+        User userToEdit = usersListView.getSelectionModel().getSelectedItem();
+        if (userToEdit != null && userToEdit.getId() != user.getId()) {
+            Dialog<Pair<String, String>> dialog = new Dialog<>();
+            dialog.setTitle("Set new username and password");
+            ButtonType confirmButtonType = new ButtonType("Modify", ButtonBar.ButtonData.OK_DONE);
+            dialog.getDialogPane().getButtonTypes().addAll(confirmButtonType, ButtonType.CANCEL);
+            GridPane grid = new GridPane();
+            grid.setHgap(10);
+            grid.setVgap(10);
+            grid.setPadding(new Insets(20, 150, 10, 10));
+            TextField username = new TextField();
+            username.setPromptText("username");
+            PasswordField password = new PasswordField();
+            password.setPromptText("password");
+            PasswordField confirmPassword = new PasswordField();
+            confirmPassword.setPromptText("confirm password");
+
+            grid.add(username, 1, 0);
+            grid.add(password, 1, 1);
+            grid.add(confirmPassword, 1, 2);
+            Node confirmButton = dialog.getDialogPane().lookupButton(confirmButtonType);
+            confirmButton.setDisable(true);
+            username.textProperty().addListener((observable, oldValue, newValue) -> {
+                confirmButton.setDisable(newValue.trim().isEmpty());
+            });
+            password.textProperty().addListener((observable, oldValue, newValue) -> {
+                confirmButton.setDisable(newValue.trim().equals("") || !confirmPassword.getText().equals(newValue));
+            });
+            confirmPassword.textProperty().addListener((observable, oldValue, newValue) -> {
+                confirmButton.setDisable(newValue.trim().equals("")|| !password.getText().equals(newValue));
+            });
+            dialog.getDialogPane().setContent(grid);
+            dialog.setResultConverter(dialogButton -> {
+                if (dialogButton == confirmButtonType) {
+                    return new Pair<>(username.getText(), password.getText());
+                }
+                return null;
+            });
+
+            Optional<Pair<String,String>> result = dialog.showAndWait();
+
+            result.ifPresent(newCredentials -> {
+                try {
+                    adminDatabase.editUser(userToEdit.getId(),newCredentials.getKey(),newCredentials.getValue());
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+                reloadUsers();
+            });
+        }
     }
+
     @FXML
     private void initialize() {
         addInvoiceButton.setOnAction(event -> addInvoice());
@@ -355,6 +423,8 @@ public class MenuScreenController {
         deleteInvoiceButton.setOnAction(event -> deleteInvoice());
         editAvailableAmountButton.setOnAction(event -> editAvailableAmount());
         editItemCostButton.setOnAction(event -> editItemCost());
+        addUserButton.setOnAction(event -> addUser());
+        editUserButton.setOnAction(event -> editUser());
         showOnlyAvailableItemsToggleButton.setOnAction(event -> reloadItems());
     }
 }
