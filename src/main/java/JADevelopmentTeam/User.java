@@ -7,4 +7,5 @@ public class User {
     enum Type{
         admin,manager,worker
     }
+    String password;
 }
