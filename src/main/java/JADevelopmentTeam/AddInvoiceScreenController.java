@@ -7,7 +7,6 @@ import JADevelopmentTeam.mysql.ItemDatabase;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXListView;
-import com.jfoenix.controls.JFXTextField;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
@@ -77,7 +76,7 @@ public class AddInvoiceScreenController {
         grid.setPadding(new Insets(20, 150, 10, 10));
         JFXComboBox<Item> itemComboBox = new JFXComboBox<>();
         itemComboBox.getItems().addAll(availableItems);
-        JFXTextField quantityTextField = new JFXTextField();
+        TextField quantityTextField = new TextField();
         grid.add(new Label("item:"), 0, 0);
         grid.add(itemComboBox, 1, 0);
         grid.add(new Label("quantity:"), 0, 1);
