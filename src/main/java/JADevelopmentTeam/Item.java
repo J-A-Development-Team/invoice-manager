@@ -42,6 +42,6 @@ public class Item {
 
     @Override
     public String toString() {
-        return name+" "+netAmount+" "+taxType+" "+ availableAmount;
+        return name+" "+netAmount+" "+TaxManager.taxToString(taxType)+" "+ availableAmount;
     }
 }
