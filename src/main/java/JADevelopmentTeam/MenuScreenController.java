@@ -168,99 +168,103 @@ public class MenuScreenController {
 
     private void editItemCost() {
         Item itemToChangePrice = itemsListView.getSelectionModel().getSelectedItem();
-        Dialog<Float> dialog = new Dialog<>();
-        dialog.setTitle("Enter new Cost");
-        ButtonType confirmButtonType = new ButtonType("Change cost", ButtonBar.ButtonData.OK_DONE);
-        dialog.getDialogPane().getButtonTypes().addAll(confirmButtonType, ButtonType.CANCEL);
-        GridPane grid = new GridPane();
-        grid.setHgap(10);
-        grid.setVgap(10);
-        grid.setPadding(new Insets(20, 150, 10, 10));
-        TextField newCostTextField = new TextField();
-        newCostTextField.setText(String.valueOf(itemToChangePrice.getNetAmount()));
-        grid.add(newCostTextField, 0, 0);
-        Node confirmButton = dialog.getDialogPane().lookupButton(confirmButtonType);
-        confirmButton.setDisable(true);
-        newCostTextField.textProperty().addListener((observable, oldValue, newValue) -> {
-            try {
-                confirmButton.setDisable(newValue.trim().isEmpty() || Float.parseFloat(newValue) < 0);
-            } catch (NumberFormatException ex) {
-                confirmButton.setDisable(true);
-            }
-        });
-        dialog.getDialogPane().setContent(grid);
-        dialog.setResultConverter(dialogButton -> {
-            if (dialogButton == confirmButtonType) {
+        if(itemToChangePrice!=null) {
+            Dialog<Float> dialog = new Dialog<>();
+            dialog.setTitle("Enter new Cost");
+            ButtonType confirmButtonType = new ButtonType("Change cost", ButtonBar.ButtonData.OK_DONE);
+            dialog.getDialogPane().getButtonTypes().addAll(confirmButtonType, ButtonType.CANCEL);
+            GridPane grid = new GridPane();
+            grid.setHgap(10);
+            grid.setVgap(10);
+            grid.setPadding(new Insets(20, 150, 10, 10));
+            TextField newCostTextField = new TextField();
+            newCostTextField.setText(String.valueOf(itemToChangePrice.getNetAmount()));
+            grid.add(newCostTextField, 0, 0);
+            Node confirmButton = dialog.getDialogPane().lookupButton(confirmButtonType);
+            confirmButton.setDisable(true);
+            newCostTextField.textProperty().addListener((observable, oldValue, newValue) -> {
                 try {
-                    return Float.parseFloat(newCostTextField.getText());
+                    confirmButton.setDisable(newValue.trim().isEmpty() || Float.parseFloat(newValue) < 0);
                 } catch (NumberFormatException ex) {
-                    return null;
+                    confirmButton.setDisable(true);
                 }
-            }
-            return null;
-        });
-
-        Optional<Float> result = dialog.showAndWait();
-
-        result.ifPresent(newCost -> {
-            try {
-                if (!newCost.equals(itemToChangePrice.getNetAmount())) {
-
-                    itemsDatabase.editItemCost(itemToChangePrice.getId(), newCost);
-                    reloadItems();
+            });
+            dialog.getDialogPane().setContent(grid);
+            dialog.setResultConverter(dialogButton -> {
+                if (dialogButton == confirmButtonType) {
+                    try {
+                        return Float.parseFloat(newCostTextField.getText());
+                    } catch (NumberFormatException ex) {
+                        return null;
+                    }
                 }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        });
+                return null;
+            });
+
+            Optional<Float> result = dialog.showAndWait();
+
+            result.ifPresent(newCost -> {
+                try {
+                    if (!newCost.equals(itemToChangePrice.getNetAmount())) {
+
+                        itemsDatabase.editItemCost(itemToChangePrice.getId(), newCost);
+                        reloadItems();
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            });
+        }
     }
 
     private void editAvailableAmount() {
         Item itemToChangeAvailableAmount = itemsListView.getSelectionModel().getSelectedItem();
-        Dialog<Float> dialog = new Dialog<>();
-        dialog.setTitle("Enter new Amount");
-        ButtonType confirmButtonType = new ButtonType("Change amount", ButtonBar.ButtonData.OK_DONE);
-        dialog.getDialogPane().getButtonTypes().addAll(confirmButtonType, ButtonType.CANCEL);
-        GridPane grid = new GridPane();
-        grid.setHgap(10);
-        grid.setVgap(10);
-        grid.setPadding(new Insets(20, 150, 10, 10));
-        TextField newAmountTextField = new TextField();
-        newAmountTextField.setText(String.valueOf(itemToChangeAvailableAmount.getAvailableAmount()));
-        grid.add(newAmountTextField, 0, 0);
-        Node confirmButton = dialog.getDialogPane().lookupButton(confirmButtonType);
-        confirmButton.setDisable(true);
-        newAmountTextField.textProperty().addListener((observable, oldValue, newValue) -> {
-            try {
-                confirmButton.setDisable(newValue.trim().isEmpty() || Float.parseFloat(newValue) < 0);
-            } catch (NumberFormatException ex) {
-                confirmButton.setDisable(true);
-            }
-        });
-        dialog.getDialogPane().setContent(grid);
-        dialog.setResultConverter(dialogButton -> {
-            if (dialogButton == confirmButtonType) {
+        if(itemToChangeAvailableAmount!=null) {
+            Dialog<Float> dialog = new Dialog<>();
+            dialog.setTitle("Enter new Amount");
+            ButtonType confirmButtonType = new ButtonType("Change amount", ButtonBar.ButtonData.OK_DONE);
+            dialog.getDialogPane().getButtonTypes().addAll(confirmButtonType, ButtonType.CANCEL);
+            GridPane grid = new GridPane();
+            grid.setHgap(10);
+            grid.setVgap(10);
+            grid.setPadding(new Insets(20, 150, 10, 10));
+            TextField newAmountTextField = new TextField();
+            newAmountTextField.setText(String.valueOf(itemToChangeAvailableAmount.getAvailableAmount()));
+            grid.add(newAmountTextField, 0, 0);
+            Node confirmButton = dialog.getDialogPane().lookupButton(confirmButtonType);
+            confirmButton.setDisable(true);
+            newAmountTextField.textProperty().addListener((observable, oldValue, newValue) -> {
                 try {
-                    return Float.parseFloat(newAmountTextField.getText());
+                    confirmButton.setDisable(newValue.trim().isEmpty() || Float.parseFloat(newValue) < 0);
                 } catch (NumberFormatException ex) {
-                    return null;
+                    confirmButton.setDisable(true);
                 }
-            }
-            return null;
-        });
-
-        Optional<Float> result = dialog.showAndWait();
-
-        result.ifPresent(newAmount -> {
-            try {
-                if (newAmount != itemToChangeAvailableAmount.getAvailableAmount()) {
-                    itemsDatabase.editAvailableAmount(itemToChangeAvailableAmount.getId(), newAmount);
-                    reloadItems();
+            });
+            dialog.getDialogPane().setContent(grid);
+            dialog.setResultConverter(dialogButton -> {
+                if (dialogButton == confirmButtonType) {
+                    try {
+                        return Float.parseFloat(newAmountTextField.getText());
+                    } catch (NumberFormatException ex) {
+                        return null;
+                    }
                 }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        });
+                return null;
+            });
+
+            Optional<Float> result = dialog.showAndWait();
+
+            result.ifPresent(newAmount -> {
+                try {
+                    if (newAmount != itemToChangeAvailableAmount.getAvailableAmount()) {
+                        itemsDatabase.editAvailableAmount(itemToChangeAvailableAmount.getId(), newAmount);
+                        reloadItems();
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            });
+        }
     }
     private void reloadInvoices() {
         invoices.clear();
