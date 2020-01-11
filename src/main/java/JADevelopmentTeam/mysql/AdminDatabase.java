@@ -18,11 +18,11 @@ public class AdminDatabase extends Database {
         super(user, password);
     }
 
-    public void addUser(String login, String password, String userType) throws SQLException {
+    public void addUser(User user) throws SQLException {
         preparedStatement = connection.prepareStatement("call  add_user(?,?,?)");
-        preparedStatement.setString(1, login);
-        preparedStatement.setString(2, password);
-        preparedStatement.setString(3, userType);
+        preparedStatement.setString(1, user.getName());
+        preparedStatement.setString(2, user.getPassword());
+        preparedStatement.setString(3, user.getType().toString());
         preparedStatement.executeUpdate();
     }
 
