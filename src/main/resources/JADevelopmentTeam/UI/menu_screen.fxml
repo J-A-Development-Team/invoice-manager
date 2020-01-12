@@ -42,7 +42,7 @@
                </image>
             </ImageView>
             <JFXButton fx:id="userMenuButton" buttonType="RAISED" layoutY="267.0" onAction="#handleMenuButtonAction" prefHeight="50.0" prefWidth="250.0" ripplerFill="WHITE" text="Users" textAlignment="CENTER" textFill="WHITE" textOverrun="CLIP" />
-            <ImageView blendMode="COLOR_DODGE" fitHeight="31.0" fitWidth="25.0" layoutX="32.0" layoutY="279.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView blendMode="COLOR_DODGE" fitHeight="31.0" fitWidth="25.0" layoutX="32.0" layoutY="279.0" pickOnBounds="true" preserveRatio="true" fx:id="userIcon">
                <image>
                   <Image url="@../user.png" />
                </image>

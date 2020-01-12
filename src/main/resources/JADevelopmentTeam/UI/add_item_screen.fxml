@@ -4,10 +4,11 @@
 <?import com.jfoenix.controls.JFXComboBox?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox alignment="TOP_CENTER" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="JADevelopmentTeam.UI.AddItemScreenController">
+<VBox alignment="TOP_CENTER" prefHeight="297.0" prefWidth="489.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="JADevelopmentTeam.UI.AddItemScreenController">
     <children>
         <TextField fx:id="itemNameTextField" prefHeight="34.0" prefWidth="559.0" promptText="Items name">
             <VBox.margin>
@@ -19,27 +20,19 @@
                 <Insets left="30.0" right="30.0" top="30.0" />
             </VBox.margin>
         </TextField>
-      <JFXComboBox fx:id="taxTypeComboBox" prefHeight="56.0" prefWidth="618.0">
-         <padding>
-            <Insets left="30.0" right="30.0" top="30.0" />
-         </padding>
-      </JFXComboBox>
-        <TextField fx:id="priceTextField" prefHeight="34.0" prefWidth="559.0" promptText="Items Price">
-            <VBox.margin>
-                <Insets left="30.0" right="30.0" top="30.0" />
-            </VBox.margin>
-        </TextField>
-        <TextField fx:id="availableAmountTextField" prefHeight="34.0" prefWidth="559.0" promptText="Available Amount">
-            <VBox.margin>
-                <Insets bottom="30.0" left="30.0" right="30.0" top="30.0" />
-            </VBox.margin>
-        </TextField>
-        <JFXButton fx:id="addItemButton" buttonType="RAISED" disable="true" prefHeight="60.0" prefWidth="438.0" style="-fx-background-color: white;" text="Add Item">
+      <AnchorPane prefHeight="100.0" prefWidth="619.0">
+         <children>
+              <TextField fx:id="priceTextField" layoutX="30.0" layoutY="42.0" prefHeight="34.0" prefWidth="136.0" promptText="Items Price" />
+              <TextField fx:id="availableAmountTextField" layoutX="175.0" layoutY="42.0" prefHeight="34.0" prefWidth="136.0" promptText="Available Amount" />
+            <JFXComboBox fx:id="taxTypeComboBox" layoutX="323.0" layoutY="46.0" prefHeight="26.0" prefWidth="136.0" />
+         </children>
+      </AnchorPane>
+        <JFXButton fx:id="addItemButton" alignment="CENTER" buttonType="RAISED" disable="true" prefHeight="36.0" prefWidth="421.0" style="-fx-background-color: white;" text="Add Item">
             <font>
-                <Font name="MathJax_Caligraphic-Bold" size="31.0" />
+                <Font name="LKLUG" size="24.0" />
             </font>
             <VBox.margin>
-                <Insets bottom="30.0" />
+                <Insets bottom="10.0" />
             </VBox.margin>
         </JFXButton>
     </children>

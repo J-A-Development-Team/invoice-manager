@@ -23,6 +23,7 @@ public class ShowInvoiceScreenController {
     public Text netText;
     public Text grossText;
     public JFXButton saveChangesButton;
+    public Label dateLabel;
     ArrayList<InvoiceElement> invoiceElements = new ArrayList<>();
     ArrayList<InvoiceElement> elementsToDelete = new ArrayList<>();
     Database database;
@@ -43,9 +44,13 @@ public class ShowInvoiceScreenController {
     }
 
     private void initWithData() {
+        if(! (user.getType() == User.Type.admin)){
+            deleteInvoiceElementButton.setVisible(false);
+        }
         invoiceNumberLabel.setText("Invoice nr " + invoice.getInvoiceId());
         netText.setText(String.valueOf(invoice.getFullNet()));
         grossText.setText(String.valueOf(invoice.getFullGross()));
+        dateLabel.setText(String.valueOf(invoice.getDate()));
         clientText.setText(invoice.getClientName()+"\n"+
                            invoice.getClientNIP()+"\n"+
                            invoice.getClientStreetAndNumber()+"\n"+
@@ -91,6 +96,8 @@ public class ShowInvoiceScreenController {
         deleteInvoiceElementButton.setOnAction(event -> deleteInvoiceElement());
         saveChangesButton.setOnAction(event -> confirmChanges());
         cancelButton.setOnAction(event -> cancelChanges());
-
+        invoiceElementsListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            deleteInvoiceElementButton.setDisable(newValue == null);
+        });
     }
 }

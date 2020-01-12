@@ -18,7 +18,7 @@ public class AddItemScreenController {
     public TextField priceTextField;
     public TextField availableAmountTextField;
     public JFXButton addItemButton;
-    public JFXComboBox<TaxManager.taxType> taxTypeComboBox;
+    public JFXComboBox<String> taxTypeComboBox;
     ItemDatabase itemDatabase;
     Database database;
     User user = new User();
@@ -34,11 +34,11 @@ public class AddItemScreenController {
         this.user = user;
         this.menuScreenController = menuScreenController;
         itemDatabase = new ItemDatabase(database.getConnection());
-        taxTypeComboBox.getItems().add(TaxManager.taxType.o0);
-        taxTypeComboBox.getItems().add(TaxManager.taxType.o5);
-        taxTypeComboBox.getItems().add(TaxManager.taxType.o8);
-        taxTypeComboBox.getItems().add(TaxManager.taxType.o23);
-        taxTypeComboBox.getItems().add(TaxManager.taxType.zw);
+        taxTypeComboBox.getItems().add("0%");
+        taxTypeComboBox.getItems().add("5%");
+        taxTypeComboBox.getItems().add("8%");
+        taxTypeComboBox.getItems().add("23%");
+        taxTypeComboBox.getItems().add("zw");
     }
 
     private void getDataFromTextFields() {
@@ -51,7 +51,10 @@ public class AddItemScreenController {
             itemPrice = -1;
             availableAmount = -1;
         }
-        taxType = taxTypeComboBox.getValue();
+        if(taxTypeComboBox.getValue()!=null){
+            taxType = TaxManager.stringToTax(taxTypeComboBox.getValue());
+
+        }
 
     }
 
@@ -59,14 +62,17 @@ public class AddItemScreenController {
         getDataFromTextFields();
         if (itemName.equals(""))
             return true;
-        if(itemPrice<0)
+        if (itemPrice < 0)
             return true;
-        if(availableAmount<0)
+        if (availableAmount < 0)
+            return true;
+        if (taxTypeComboBox.getValue() ==null)
             return true;
         return false;
     }
 
     private void addNewItem() {
+        getDataFromTextFields();
         Item item = new Item(itemName, itemPrice, taxType, itemDescription, 0, availableAmount);
         try {
             itemDatabase.add_item(item);
@@ -92,7 +98,9 @@ public class AddItemScreenController {
         availableAmountTextField.textProperty().addListener((observable, oldValue, newValue) -> {
             addItemButton.setDisable(checkIfAllFiled());
         });
-
+        taxTypeComboBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            addItemButton.setDisable(checkIfAllFiled());
+        });
 
     }
 }

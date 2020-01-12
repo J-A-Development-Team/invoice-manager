@@ -16,6 +16,7 @@ import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
@@ -51,6 +52,7 @@ public class MenuScreenController {
     public AnchorPane usersPane;
     public JFXButton userMenuButton;
     public JFXButton showInvoiceButton;
+    public ImageView userIcon;
     Database database;
     InvoiceDatabase invoiceDatabase;
     ClientDatabase clientDatabase;
@@ -84,11 +86,13 @@ public class MenuScreenController {
                 menuSidePane.setStyle("-fx-background-color:  #3ed111");
                 deleteItemButton.setVisible(false);
                 userMenuButton.setVisible(false);
+                userIcon.setVisible(false);
                 deleteInvoiceButton.setVisible(false);
                 break;
             case worker:
                 menuSidePane.setStyle("-fx-background-color:  #0787f0");
                 addItemButton.setVisible(false);
+                userIcon.setVisible(false);
                 userMenuButton.setVisible(false);
                 editItemCostButton.setVisible(false);
                 deleteInvoiceButton.setVisible(false);

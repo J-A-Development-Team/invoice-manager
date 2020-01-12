@@ -13,6 +13,7 @@ import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
+import javafx.scene.text.Text;
 
 import java.sql.SQLException;
 import java.time.Instant;
@@ -28,6 +29,10 @@ public class AddInvoiceScreenController {
     public JFXListView<InvoiceElement> invoiceElementJFXListView = new JFXListView<>();
     public JFXButton generateButton;
     public DatePicker datePicker;
+    public Text netText;
+    public Text grossText;
+    float net = 0;
+    float gross= 0;
     Database database;
     ClientDatabase clientDatabase;
     ItemDatabase itemDatabase;
@@ -116,9 +121,22 @@ public class AddInvoiceScreenController {
         Optional<InvoiceElement> result = dialog.showAndWait();
 
         result.ifPresent(invoiceElement -> {
+
             invoiceElements.add(invoiceElement);
             invoiceElementJFXListView.getItems().add(invoiceElement);
+            calculateNetAndGross();
         });
+    }
+    private void calculateNetAndGross(){
+        net = 0;
+        gross =0;
+        for(InvoiceElement invoiceElement : invoiceElements){
+            net += invoiceElement.netCalculation();
+            gross += invoiceElement.grossCalculation();
+        }
+        netText.setText(String.valueOf(net));
+        grossText.setText(String.valueOf(gross));
+
     }
 
     private void generateNewInvoice() {

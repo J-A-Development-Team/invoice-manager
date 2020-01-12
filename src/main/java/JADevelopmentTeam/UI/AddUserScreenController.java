@@ -78,10 +78,8 @@ public class AddUserScreenController {
         confirmPasswordTextField.textProperty().addListener((observable, oldValue, newValue) -> {
             addUserButton.setDisable(checkIfAllFiled());
         });
-        userTypeComboBox.itemsProperty().addListener((observable, oldValue, newValue) -> {
+        userTypeComboBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             addUserButton.setDisable(newValue == null);
-
-
         });
     }
 }

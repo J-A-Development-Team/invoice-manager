@@ -10,7 +10,7 @@ public class InvoiceElement {
 
     }
 
-    float grossCalculation() {
+    public float grossCalculation() {
         return netCalculation() + TaxManager.taxCalculation(netCalculation(), item.getTaxType());
     }
 
@@ -22,12 +22,12 @@ public class InvoiceElement {
         return quantity;
     }
 
-    float netCalculation() {
+    public float netCalculation() {
         return quantity * item.getNetAmount();
     }
 
     @Override
     public String toString() {
-        return item.getName()+" "+quantity;
+        return item.getName()+" amount: "+quantity+" net: "+ netCalculation()+" gross: "+grossCalculation();
     }
 }

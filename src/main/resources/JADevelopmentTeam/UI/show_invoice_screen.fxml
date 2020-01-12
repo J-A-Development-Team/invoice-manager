@@ -6,33 +6,37 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
-<?import javafx.scene.text.TextFlow?>
 
 <AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="JADevelopmentTeam.UI.ShowInvoiceScreenController">
    <children>
-      <Label fx:id="invoiceNumberLabel" alignment="TOP_CENTER" layoutX="224.0" layoutY="14.0" prefHeight="16.0" prefWidth="153.0" text="Invoice nr 1">
+      <Label fx:id="invoiceNumberLabel" alignment="TOP_CENTER" layoutX="387.0" layoutY="15.0" prefHeight="16.0" prefWidth="153.0" text="Invoice nr 1">
          <font>
             <Font size="17.0" />
          </font>
       </Label>
-      <Label alignment="BOTTOM_CENTER" layoutX="369.0" layoutY="46.0" prefHeight="26.0" prefWidth="79.0" text="Client:">
+      <Label alignment="BOTTOM_LEFT" layoutX="369.0" layoutY="53.0" prefHeight="26.0" prefWidth="79.0" text="Client:">
          <font>
             <Font size="15.0" />
          </font>
       </Label>
-      <JFXListView fx:id="invoiceElementsListView" layoutX="20.0" layoutY="73.0" prefHeight="278.0" prefWidth="194.0" />
-      <JFXButton fx:id="deleteInvoiceElementButton" buttonType="RAISED" layoutX="20.0" layoutY="360.0" prefHeight="26.0" prefWidth="194.0" style="-fx-background-color: white;" text="Delete Invoice Element" />
-      <JFXButton fx:id="saveChangesButton" buttonType="RAISED" defaultButton="true" layoutX="435.0" layoutY="360.0" prefHeight="26.0" prefWidth="137.0" style="-fx-background-color: white;" text="Save changes" visible="false" />
-      <JFXButton fx:id="cancelButton" buttonType="RAISED" cancelButton="true" layoutX="271.0" layoutY="360.0" prefHeight="26.0" prefWidth="137.0" style="-fx-background-color: white;" text="Cancel" visible="false" />
-      <Label alignment="BOTTOM_CENTER" layoutX="20.0" layoutY="46.0" prefHeight="26.0" prefWidth="194.0" text="Invoice Elements">
+      <JFXListView fx:id="invoiceElementsListView" layoutX="20.0" layoutY="50.0" prefHeight="300.0" prefWidth="318.0" />
+      <JFXButton fx:id="deleteInvoiceElementButton" buttonType="RAISED" disable="true" layoutX="20.0" layoutY="360.0" prefHeight="26.0" prefWidth="318.0" style="-fx-background-color: white;" text="Delete Invoice Element" />
+      <JFXButton fx:id="saveChangesButton" buttonType="RAISED" layoutX="463.0" layoutY="360.0" prefHeight="26.0" prefWidth="122.0" style="-fx-background-color: white;" text="Save changes" visible="false" />
+      <JFXButton fx:id="cancelButton" buttonType="RAISED" cancelButton="true" layoutX="369.0" layoutY="360.0" prefHeight="26.0" prefWidth="79.0" style="-fx-background-color: white;" text="Cancel" visible="false" />
+      <Label alignment="BOTTOM_CENTER" layoutX="82.0" layoutY="12.0" prefHeight="26.0" prefWidth="194.0" text="Invoice Elements">
          <font>
             <Font size="15.0" />
          </font>
       </Label>
-      <Label fx:id="clientText" layoutX="265.0" layoutY="83.0" prefHeight="111.0" prefWidth="288.0" />
-      <Label layoutX="253.0" layoutY="253.0" text="Net:" />
-      <Label layoutX="340.0" layoutY="253.0" text="Gross:" />
-      <Text fx:id="netText" layoutX="286.0" layoutY="266.0" strokeType="OUTSIDE" strokeWidth="0.0" text="12" />
-      <Text fx:id="grossText" layoutX="394.0" layoutY="266.0" strokeType="OUTSIDE" strokeWidth="0.0" text="15" />
+      <Label fx:id="clientText" layoutX="369.0" layoutY="83.0" prefHeight="111.0" prefWidth="211.0" />
+      <Label layoutX="367.0" layoutY="252.0" text="Net:" />
+      <Label layoutX="448.0" layoutY="253.0" text="Gross:" />
+      <Text fx:id="netText" layoutX="400.0" layoutY="265.0" strokeType="OUTSIDE" strokeWidth="0.0" text="12" />
+      <Text fx:id="grossText" layoutX="495.0" layoutY="266.0" strokeType="OUTSIDE" strokeWidth="0.0" text="15" />
+      <Label fx:id="dateLabel" layoutX="367.0" layoutY="200.0" prefHeight="32.0" prefWidth="211.0" text="Label">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Label>
    </children>
 </AnchorPane>

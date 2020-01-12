@@ -19,6 +19,6 @@ public class Client {
 
     @Override
     public String toString() {
-        return name;
+        return name+" NIP: "+NIP;
     }
 }
