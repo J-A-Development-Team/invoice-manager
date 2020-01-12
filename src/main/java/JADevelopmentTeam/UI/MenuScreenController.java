@@ -1,5 +1,9 @@
-package JADevelopmentTeam;
+package JADevelopmentTeam.UI;
 
+import JADevelopmentTeam.Client;
+import JADevelopmentTeam.Invoice;
+import JADevelopmentTeam.Item;
+import JADevelopmentTeam.User;
 import JADevelopmentTeam.mysql.*;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXListView;
@@ -46,6 +50,7 @@ public class MenuScreenController {
     public JFXButton editUserButton;
     public AnchorPane usersPane;
     public JFXButton userMenuButton;
+    public JFXButton showInvoiceButton;
     Database database;
     InvoiceDatabase invoiceDatabase;
     ClientDatabase clientDatabase;
@@ -71,7 +76,7 @@ public class MenuScreenController {
     }
 
     private void configureForUserType() {
-        switch (user.type) {
+        switch (user.getType()) {
             case admin:
                 menuSidePane.setStyle("-fx-background-color:  #c9160c");
                 break;
@@ -94,20 +99,16 @@ public class MenuScreenController {
     }
 
     private void initializeWithData() {
-        welcomeMessage.setText("Welcome \n" + user.name + "!");
+        welcomeMessage.setText("Welcome \n" + user.getName() + "!");
         configureForUserType();
-        try {
-            reloadInvoices();
-            clients.addAll(clientDatabase.getAllClients());
-            clientsListView.getItems().addAll(clients);
-            reloadItems();
-            if (user.type == User.Type.admin) {
-                reloadUsers();
-            }
-            invoicePane.toFront();
-        } catch (SQLException e) {
-            e.printStackTrace();
+        reloadInvoices();
+        reloadClients();
+        reloadItems();
+        if (user.getType() == User.Type.admin) {
+            reloadUsers();
         }
+        invoicePane.toFront();
+
     }
 
     public void handleMenuButtonAction(javafx.event.ActionEvent event) {
@@ -142,7 +143,7 @@ public class MenuScreenController {
         try {
             scene = new Scene(loader.load());
             AddInvoiceScreenController addInvoiceScreenController = loader.getController();
-            addInvoiceScreenController.initData(database, user, invoicesListView);
+            addInvoiceScreenController.initData(database, user, this);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -157,7 +158,7 @@ public class MenuScreenController {
         try {
             scene = new Scene(loader.load());
             AddClientScreenController addClientScreenController = loader.getController();
-            addClientScreenController.initData(database, user, clientsListView);
+            addClientScreenController.initData(database, user, this);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -172,7 +173,7 @@ public class MenuScreenController {
         try {
             scene = new Scene(loader.load());
             AddItemScreenController addItemScreenController = loader.getController();
-            addItemScreenController.initData(database, user, itemsListView);
+            addItemScreenController.initData(database, user, this);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -281,7 +282,7 @@ public class MenuScreenController {
         }
     }
 
-    private void reloadInvoices() {
+    void reloadInvoices() {
         invoices.clear();
         invoicesListView.getItems().clear();
         try {
@@ -292,7 +293,7 @@ public class MenuScreenController {
         invoicesListView.getItems().addAll(invoices);
     }
 
-    private void reloadItems() {
+    void reloadItems() {
         System.out.println("reloading");
         items.clear();
         itemsListView.getItems().clear();
@@ -311,7 +312,7 @@ public class MenuScreenController {
         itemsListView.getItems().addAll(items);
     }
 
-    private void reloadUsers() {
+    void reloadUsers() {
         users.clear();
         usersListView.getItems().clear();
         try {
@@ -346,6 +347,17 @@ public class MenuScreenController {
         }
     }
 
+    void reloadClients() {
+        clients.clear();
+        clientsListView.getItems().clear();
+        try {
+            clients.addAll(clientDatabase.getAllClients());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        clientsListView.getItems().addAll(clients);
+    }
+
     private void addUser() {
         Stage stage = new Stage();
         FXMLLoader loader = new FXMLLoader(App.class.getResource("add_user_screen.fxml"));
@@ -353,7 +365,7 @@ public class MenuScreenController {
         try {
             scene = new Scene(loader.load());
             AddUserScreenController addUserScreenController = loader.getController();
-            addUserScreenController.initData(database, user, usersListView);
+            addUserScreenController.initData(database, user, this);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -391,7 +403,7 @@ public class MenuScreenController {
                 confirmButton.setDisable(newValue.trim().equals("") || !confirmPassword.getText().equals(newValue));
             });
             confirmPassword.textProperty().addListener((observable, oldValue, newValue) -> {
-                confirmButton.setDisable(newValue.trim().equals("")|| !password.getText().equals(newValue));
+                confirmButton.setDisable(newValue.trim().equals("") || !password.getText().equals(newValue));
             });
             dialog.getDialogPane().setContent(grid);
             dialog.setResultConverter(dialogButton -> {
@@ -401,17 +413,36 @@ public class MenuScreenController {
                 return null;
             });
 
-            Optional<Pair<String,String>> result = dialog.showAndWait();
+            Optional<Pair<String, String>> result = dialog.showAndWait();
 
             result.ifPresent(newCredentials -> {
                 try {
-                    adminDatabase.editUser(userToEdit.getId(),newCredentials.getKey(),newCredentials.getValue());
+                    adminDatabase.editUser(userToEdit.getId(), newCredentials.getKey(), newCredentials.getValue());
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
                 reloadUsers();
             });
         }
+    }
+
+    private void showInvoice() {
+        Invoice invoiceToShow = invoicesListView.getSelectionModel().getSelectedItem();
+        if (invoiceToShow != null) {
+            Stage stage = new Stage();
+            FXMLLoader loader = new FXMLLoader(App.class.getResource("show_invoice_screen.fxml"));
+            Scene scene = null;
+            try {
+                scene = new Scene(loader.load());
+                ShowInvoiceScreenController showInvoiceScreenController = loader.getController();
+                showInvoiceScreenController.initData(database, user, invoiceToShow, this);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            stage.setScene(scene);
+            stage.show();
+        }
+
     }
 
     @FXML
@@ -426,5 +457,6 @@ public class MenuScreenController {
         addUserButton.setOnAction(event -> addUser());
         editUserButton.setOnAction(event -> editUser());
         showOnlyAvailableItemsToggleButton.setOnAction(event -> reloadItems());
+        showInvoiceButton.setOnAction(event -> showInvoice());
     }
 }

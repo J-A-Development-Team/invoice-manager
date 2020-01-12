@@ -1,9 +1,10 @@
-package JADevelopmentTeam;
+package JADevelopmentTeam.UI;
 
+import JADevelopmentTeam.Client;
+import JADevelopmentTeam.User;
 import JADevelopmentTeam.mysql.ClientDatabase;
 import JADevelopmentTeam.mysql.Database;
 import com.jfoenix.controls.JFXButton;
-import com.jfoenix.controls.JFXListView;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import java.sql.SQLException;
@@ -19,16 +20,16 @@ public class AddClientScreenController {
     ClientDatabase clientDatabase;
     Database database;
     User user = new User();
+    MenuScreenController menuScreenController;
     private String clientName;
     private String NIP;
     private String streetAndNumber;
     private String postCode;
     private String city;
-    public JFXListView <Client> clients;
-    public void initData(Database dataBase, User user, JFXListView <Client> clients) {
+    public void initData(Database dataBase, User user, MenuScreenController menuScreenController) {
         this.database = dataBase;
         this.user = user;
-        this.clients = clients;
+        this.menuScreenController = menuScreenController;
         clientDatabase = new ClientDatabase(database.getConnection());
     }
 
@@ -60,8 +61,7 @@ public class AddClientScreenController {
         Client client = new Client(0,clientName,NIP,city,streetAndNumber,postCode);
         try {
             clientDatabase.addClient(client);
-            clients.getItems().clear();
-            clients.getItems().addAll(clientDatabase.getAllClients());
+            menuScreenController.reloadClients();
             addClientButton.getScene().getWindow().hide();
         } catch (SQLException e) {
             e.printStackTrace();

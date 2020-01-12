@@ -1,10 +1,12 @@
-package JADevelopmentTeam;
+package JADevelopmentTeam.UI;
 
+import JADevelopmentTeam.Item;
+import JADevelopmentTeam.TaxManager;
+import JADevelopmentTeam.User;
 import JADevelopmentTeam.mysql.Database;
 import JADevelopmentTeam.mysql.ItemDatabase;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
-import com.jfoenix.controls.JFXListView;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 
@@ -17,20 +19,20 @@ public class AddItemScreenController {
     public TextField availableAmountTextField;
     public JFXButton addItemButton;
     public JFXComboBox<TaxManager.taxType> taxTypeComboBox;
-    public JFXListView<Item> items;
     ItemDatabase itemDatabase;
     Database database;
     User user = new User();
+    MenuScreenController menuScreenController;
     private String itemName;
     private String itemDescription;
     private float itemPrice;
     private float availableAmount;
     private TaxManager.taxType taxType;
 
-    public void initData(Database dataBase, User user, JFXListView<Item> items) {
+    public void initData(Database dataBase, User user, MenuScreenController menuScreenController) {
         this.database = dataBase;
         this.user = user;
-        this.items = items;
+        this.menuScreenController = menuScreenController;
         itemDatabase = new ItemDatabase(database.getConnection());
         taxTypeComboBox.getItems().add(TaxManager.taxType.o0);
         taxTypeComboBox.getItems().add(TaxManager.taxType.o5);
@@ -68,8 +70,7 @@ public class AddItemScreenController {
         Item item = new Item(itemName, itemPrice, taxType, itemDescription, 0, availableAmount);
         try {
             itemDatabase.add_item(item);
-            items.getItems().clear();
-            items.getItems().addAll(itemDatabase.getAllItems());
+            menuScreenController.reloadItems();
             addItemButton.getScene().getWindow().hide();
         } catch (SQLException e) {
             e.printStackTrace();

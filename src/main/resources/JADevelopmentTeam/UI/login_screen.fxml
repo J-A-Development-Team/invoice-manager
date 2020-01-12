@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="parentPane" prefHeight="600.0" prefWidth="900.0" style="-fx-background-color: purple;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="JADevelopmentTeam.LoginScreenController">
+<AnchorPane fx:id="parentPane" prefHeight="600.0" prefWidth="900.0" style="-fx-background-color: purple;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="JADevelopmentTeam.UI.LoginScreenController">
    <children>
       <Label layoutX="252.0" layoutY="106.0" text="Please enter your credentials" textFill="WHITE">
          <font>
@@ -27,7 +27,7 @@
          <graphic>
             <ImageView fitHeight="46.0" fitWidth="45.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@back-button.png" />
+                  <Image url="@../back-button.png" />
                </image>
             </ImageView>
          </graphic>

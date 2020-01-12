@@ -1,5 +1,6 @@
-package JADevelopmentTeam;
+package JADevelopmentTeam.UI;
 
+import JADevelopmentTeam.User;
 import JADevelopmentTeam.mysql.Database;
 import com.jfoenix.controls.JFXButton;
 import javafx.event.ActionEvent;
@@ -31,7 +32,7 @@ public class LoginScreenController {
         this.stage = stage;
         this.user = user;
         try {
-            switch (user.type) {
+            switch (user.getType()) {
                 case admin:
                     parentPane.setStyle("-fx-background-color:  #c9160c");
                     database = new Database("invoice_admin", "admin_password");
@@ -51,7 +52,7 @@ public class LoginScreenController {
     }
 
     private String getUserTypeAsString() {
-        switch (user.type) {
+        switch (user.getType()) {
             case admin:
                 return "admin";
             case manager:
@@ -86,8 +87,8 @@ public class LoginScreenController {
         if (loginResult == -1) {
             handleWrongCredentials();
         } else {
-            user.id = loginResult;
-            user.name = login;
+            user.setId(loginResult);
+            user.setName(login);
             try {
                 FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("menu_screen.fxml"));
                 stage.getScene().setRoot(fxmlLoader.load());

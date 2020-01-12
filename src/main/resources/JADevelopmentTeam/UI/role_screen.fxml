@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="JADevelopmentTeam.RoleScreenController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="JADevelopmentTeam.UI.RoleScreenController">
    <children>
       <Label layoutX="331.0" layoutY="109.0" text="Choose your role" textAlignment="CENTER">
          <font>
@@ -33,7 +33,7 @@
                         </Label>
                         <ImageView fitHeight="94.0" fitWidth="112.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@manager.png" />
+                              <Image url="@../manager.png" />
                            </image>
                         </ImageView>
                      </children>
@@ -54,7 +54,7 @@
                         </Label>
                         <ImageView fitHeight="94.0" fitWidth="112.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@worker.png" />
+                              <Image url="@../worker.png" />
                            </image>
                         </ImageView>
                      </children>
@@ -75,7 +75,7 @@
                         </Label>
                         <ImageView fitHeight="94.0" fitWidth="112.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@gear.png" />
+                              <Image url="@../gear.png" />
                            </image>
                         </ImageView>
                      </children>

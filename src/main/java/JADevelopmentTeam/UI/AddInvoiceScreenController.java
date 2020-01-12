@@ -1,5 +1,6 @@
-package JADevelopmentTeam;
+package JADevelopmentTeam.UI;
 
+import JADevelopmentTeam.*;
 import JADevelopmentTeam.mysql.ClientDatabase;
 import JADevelopmentTeam.mysql.Database;
 import JADevelopmentTeam.mysql.InvoiceDatabase;
@@ -31,14 +32,14 @@ public class AddInvoiceScreenController {
     ClientDatabase clientDatabase;
     ItemDatabase itemDatabase;
     InvoiceDatabase invoiceDatabase;
+    MenuScreenController menuScreenController;
     ArrayList<InvoiceElement> invoiceElements = new ArrayList<>();
-    JFXListView<Invoice> invoices;
     User user = new User();
 
-    public void initData(Database dataBase, User user, JFXListView<Invoice> invoicesListView) {
+    public void initData(Database dataBase, User user,MenuScreenController menuScreenController) {
         this.database = dataBase;
         this.user = user;
-        invoices = invoicesListView;
+        this.menuScreenController = menuScreenController;
         clientDatabase = new ClientDatabase(database.getConnection());
         itemDatabase = new ItemDatabase(database.getConnection());
         invoiceDatabase = new InvoiceDatabase(database.getConnection());
@@ -128,9 +129,9 @@ public class AddInvoiceScreenController {
         Date date = Date.from(instant);
         Invoice invoice = invoiceBuilder.createNewInvoice(clientComboBox.getValue(), date, 0);
         try {
-            invoiceDatabase.addInvoice(invoice, user.id, clientComboBox.getValue().id);
-            invoices.getItems().clear();
-            invoices.getItems().addAll(invoiceDatabase.getAllInvoices());
+            invoiceDatabase.addInvoice(invoice, user.getId(), clientComboBox.getValue().id);
+            menuScreenController.reloadInvoices();
+            menuScreenController.reloadItems();
             addItemButton.getScene().getWindow().hide();
         } catch (SQLException e) {
             e.printStackTrace();

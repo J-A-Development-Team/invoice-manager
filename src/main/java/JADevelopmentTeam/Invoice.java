@@ -88,4 +88,20 @@ public class Invoice {
     public Date getDate() {
         return date;
     }
+
+    public String getClientName() {
+        return clientName;
+    }
+
+    public String getClientPostCode() {
+        return clientPostCode;
+    }
+
+    public String getClientStreetAndNumber() {
+        return clientStreetAndNumber;
+    }
+
+    public String getClientCity() {
+        return clientCity;
+    }
 }

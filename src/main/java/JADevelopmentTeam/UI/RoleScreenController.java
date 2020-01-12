@@ -1,5 +1,6 @@
-package JADevelopmentTeam;
+package JADevelopmentTeam.UI;
 
+import JADevelopmentTeam.User;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
@@ -35,21 +36,21 @@ public class RoleScreenController {
      */
     @FXML
     private void adminLogin() {
-        user.type = User.Type.admin;
+        user.setType(User.Type.admin);
         openLoginScreen();
         // Add an action for the "Open Layout2" button
 
     }
     @FXML
     private void managerLogin() {
-        user.type = User.Type.manager;
+        user.setType(User.Type.manager);
         openLoginScreen();
 
         // Add an action for the "Open Layout2" button
 
     } @FXML
     private void workerLogin() {
-        user.type = User.Type.worker;
+        user.setType(User.Type.worker);
         openLoginScreen();
 
         // Add an action for the "Open Layout2" button

@@ -19,10 +19,11 @@ public class InvoiceElementDatabase extends Database {
     }
 
     public void deleteInvoiceElement(int invoice_id, int itemID, float quantity) throws SQLException {
-        PreparedStatement preparedStatement = connection.prepareStatement("call add_invoice_element(?,?,?)");
+        PreparedStatement preparedStatement = connection.prepareStatement("call delete_invoice_element(?,?,?)");
         preparedStatement.setInt(1, invoice_id);
         preparedStatement.setInt(2, itemID);
         preparedStatement.setFloat(3, quantity);
+        preparedStatement.executeUpdate();
     }
 
     static InvoiceElement resultToInvoiceElement(ResultSet rs) throws SQLException {
