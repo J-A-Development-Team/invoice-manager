@@ -42,7 +42,7 @@
                </image>
             </ImageView>
             <JFXButton fx:id="userMenuButton" buttonType="RAISED" layoutY="267.0" onAction="#handleMenuButtonAction" prefHeight="50.0" prefWidth="250.0" ripplerFill="WHITE" text="Users" textAlignment="CENTER" textFill="WHITE" textOverrun="CLIP" />
-            <ImageView blendMode="COLOR_DODGE" fitHeight="31.0" fitWidth="25.0" layoutX="32.0" layoutY="279.0" pickOnBounds="true" preserveRatio="true" fx:id="userIcon">
+            <ImageView fx:id="userIcon" blendMode="COLOR_DODGE" fitHeight="31.0" fitWidth="25.0" layoutX="32.0" layoutY="279.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../user.png" />
                </image>
@@ -57,7 +57,7 @@
                   <JFXButton fx:id="addClientButton" buttonType="RAISED" layoutX="14.0" layoutY="14.0" style="-fx-background-color: white;" text="Add Client" />
                </children>
             </AnchorPane>
-            <AnchorPane fx:id="itemPane" style="-fx-background-color: white;">
+            <AnchorPane fx:id="itemPane" style="-fx-background-color: white;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <children>
                   <JFXListView fx:id="itemsListView" layoutY="52.0" prefHeight="549.0" prefWidth="650.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="52.0" />
                   <JFXButton fx:id="addItemButton" buttonType="RAISED" layoutX="14.0" layoutY="14.0" style="-fx-background-color: white;" text="Add Item" />
@@ -67,14 +67,14 @@
                   <JFXButton fx:id="deleteItemButton" buttonType="RAISED" layoutX="319.0" layoutY="14.0" style="-fx-background-color: white;" text="Delete Item" />
                </children>
             </AnchorPane>
-            <AnchorPane fx:id="usersPane" style="-fx-background-color: white;">
+            <AnchorPane fx:id="usersPane" style="-fx-background-color: white;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <children>
                   <JFXListView fx:id="usersListView" layoutY="52.0" prefHeight="549.0" prefWidth="650.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="52.0" />
                   <JFXButton fx:id="addUserButton" buttonType="RAISED" layoutX="14.0" layoutY="14.0" style="-fx-background-color: white;" text="Add User" />
                   <JFXButton fx:id="editUserButton" buttonType="RAISED" layoutX="123.0" layoutY="14.0" style="-fx-background-color: white;" text="Edit User" />
                </children>
             </AnchorPane>
-            <AnchorPane fx:id="invoicePane" style="-fx-background-color: white;">
+            <AnchorPane fx:id="invoicePane" style="-fx-background-color: white;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <children>
                   <JFXListView fx:id="invoicesListView" layoutY="52.0" prefHeight="549.0" prefWidth="650.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="52.0" />
                   <JFXButton fx:id="addInvoiceButton" buttonType="RAISED" layoutX="14.0" layoutY="14.0" style="-fx-background-color: white;" text="Add Invoice" />
