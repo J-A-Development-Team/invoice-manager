@@ -188,39 +188,8 @@ public class MenuScreenController {
     private void editItemCost() {
         Item itemToChangePrice = itemsListView.getSelectionModel().getSelectedItem();
         if (itemToChangePrice != null) {
-            Dialog<Float> dialog = new Dialog<>();
-            dialog.setTitle("Enter new Cost");
-            ButtonType confirmButtonType = new ButtonType("Change cost", ButtonBar.ButtonData.OK_DONE);
-            dialog.getDialogPane().getButtonTypes().addAll(confirmButtonType, ButtonType.CANCEL);
-            GridPane grid = new GridPane();
-            grid.setHgap(10);
-            grid.setVgap(10);
-            grid.setPadding(new Insets(20, 150, 10, 10));
-            TextField newCostTextField = new TextField();
-            newCostTextField.setText(String.valueOf(itemToChangePrice.getNetAmount()));
-            grid.add(newCostTextField, 0, 0);
-            Node confirmButton = dialog.getDialogPane().lookupButton(confirmButtonType);
-            confirmButton.setDisable(true);
-            newCostTextField.textProperty().addListener((observable, oldValue, newValue) -> {
-                try {
-                    confirmButton.setDisable(newValue.trim().isEmpty() || Float.parseFloat(newValue) < 0);
-                } catch (NumberFormatException ex) {
-                    confirmButton.setDisable(true);
-                }
-            });
-            dialog.getDialogPane().setContent(grid);
-            dialog.setResultConverter(dialogButton -> {
-                if (dialogButton == confirmButtonType) {
-                    try {
-                        return Float.parseFloat(newCostTextField.getText());
-                    } catch (NumberFormatException ex) {
-                        return null;
-                    }
-                }
-                return null;
-            });
 
-            Optional<Float> result = dialog.showAndWait();
+            Optional<Float> result = MyDialogFactory.getDialogForEditingCost(itemToChangePrice).showAndWait();
 
             result.ifPresent(newCost -> {
                 try {
@@ -239,39 +208,8 @@ public class MenuScreenController {
     private void editAvailableAmount() {
         Item itemToChangeAvailableAmount = itemsListView.getSelectionModel().getSelectedItem();
         if (itemToChangeAvailableAmount != null) {
-            Dialog<Float> dialog = new Dialog<>();
-            dialog.setTitle("Enter new Amount");
-            ButtonType confirmButtonType = new ButtonType("Change amount", ButtonBar.ButtonData.OK_DONE);
-            dialog.getDialogPane().getButtonTypes().addAll(confirmButtonType, ButtonType.CANCEL);
-            GridPane grid = new GridPane();
-            grid.setHgap(10);
-            grid.setVgap(10);
-            grid.setPadding(new Insets(20, 150, 10, 10));
-            TextField newAmountTextField = new TextField();
-            newAmountTextField.setText(String.valueOf(itemToChangeAvailableAmount.getAvailableAmount()));
-            grid.add(newAmountTextField, 0, 0);
-            Node confirmButton = dialog.getDialogPane().lookupButton(confirmButtonType);
-            confirmButton.setDisable(true);
-            newAmountTextField.textProperty().addListener((observable, oldValue, newValue) -> {
-                try {
-                    confirmButton.setDisable(newValue.trim().isEmpty() || Float.parseFloat(newValue) < 0);
-                } catch (NumberFormatException ex) {
-                    confirmButton.setDisable(true);
-                }
-            });
-            dialog.getDialogPane().setContent(grid);
-            dialog.setResultConverter(dialogButton -> {
-                if (dialogButton == confirmButtonType) {
-                    try {
-                        return Float.parseFloat(newAmountTextField.getText());
-                    } catch (NumberFormatException ex) {
-                        return null;
-                    }
-                }
-                return null;
-            });
 
-            Optional<Float> result = dialog.showAndWait();
+            Optional<Float> result = MyDialogFactory.getDialogForEditingAvailableAmount(itemToChangeAvailableAmount).showAndWait();
 
             result.ifPresent(newAmount -> {
                 try {
@@ -380,44 +318,9 @@ public class MenuScreenController {
     private void editUser() {
         User userToEdit = usersListView.getSelectionModel().getSelectedItem();
         if (userToEdit != null && userToEdit.getId() != user.getId()) {
-            Dialog<Pair<String, String>> dialog = new Dialog<>();
-            dialog.setTitle("Set new username and password");
-            ButtonType confirmButtonType = new ButtonType("Modify", ButtonBar.ButtonData.OK_DONE);
-            dialog.getDialogPane().getButtonTypes().addAll(confirmButtonType, ButtonType.CANCEL);
-            GridPane grid = new GridPane();
-            grid.setHgap(10);
-            grid.setVgap(10);
-            grid.setPadding(new Insets(20, 150, 10, 10));
-            TextField username = new TextField();
-            username.setPromptText("username");
-            PasswordField password = new PasswordField();
-            password.setPromptText("password");
-            PasswordField confirmPassword = new PasswordField();
-            confirmPassword.setPromptText("confirm password");
 
-            grid.add(username, 1, 0);
-            grid.add(password, 1, 1);
-            grid.add(confirmPassword, 1, 2);
-            Node confirmButton = dialog.getDialogPane().lookupButton(confirmButtonType);
-            confirmButton.setDisable(true);
-            username.textProperty().addListener((observable, oldValue, newValue) -> {
-                confirmButton.setDisable(newValue.trim().isEmpty());
-            });
-            password.textProperty().addListener((observable, oldValue, newValue) -> {
-                confirmButton.setDisable(newValue.trim().equals("") || !confirmPassword.getText().equals(newValue));
-            });
-            confirmPassword.textProperty().addListener((observable, oldValue, newValue) -> {
-                confirmButton.setDisable(newValue.trim().equals("") || !password.getText().equals(newValue));
-            });
-            dialog.getDialogPane().setContent(grid);
-            dialog.setResultConverter(dialogButton -> {
-                if (dialogButton == confirmButtonType) {
-                    return new Pair<>(username.getText(), password.getText());
-                }
-                return null;
-            });
 
-            Optional<Pair<String, String>> result = dialog.showAndWait();
+            Optional<Pair<String, String>> result = MyDialogFactory.getDialogForEditingUser().showAndWait();
 
             result.ifPresent(newCredentials -> {
                 try {
