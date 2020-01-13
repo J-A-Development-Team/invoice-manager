@@ -44,7 +44,7 @@ public abstract class MyDialogFactory {
             }
         });
         dialog.setResultConverter(dialogButton -> {
-            if (dialogButton.equals(confirmButtonType)) {
+            if (dialogButton == dialog.getConfirmButtonType()) {
                 try {
                     return new InvoiceElement(itemComboBox.getValue(), Float.parseFloat(quantityTextField.getText()));
 
