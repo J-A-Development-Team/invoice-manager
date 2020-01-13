@@ -18,6 +18,7 @@ public class App extends Application {
         stage.setScene(scene);
         RoleScreenController roleScreenController = fxmlLoader.getController();
         roleScreenController.initData(stage);
+        stage.setTitle("Invoice App");
         stage.show();
     }
     public static void main(String[] args) {
