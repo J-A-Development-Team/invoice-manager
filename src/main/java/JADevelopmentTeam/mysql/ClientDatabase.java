@@ -4,23 +4,20 @@ package JADevelopmentTeam.mysql;
 import JADevelopmentTeam.Client;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-public class ClientDatabase extends Database {
-
-
-    public ClientDatabase(String user, String password) throws SQLException {
-        super(user, password);
-    }
+public class ClientDatabase {
+    Connection connection;
 
     public ClientDatabase(Connection connection) {
-        super(connection);
+        this.connection = connection;
     }
 
     public void addClient(Client client) throws SQLException {
-        preparedStatement = connection.prepareStatement("call  add_client(?,?,?,?,?)");
+        PreparedStatement preparedStatement = connection.prepareStatement("call  add_client(?,?,?,?,?)");
         preparedStatement.setString(1, client.name);
         preparedStatement.setString(2, client.NIP);
         preparedStatement.setString(3, client.city);

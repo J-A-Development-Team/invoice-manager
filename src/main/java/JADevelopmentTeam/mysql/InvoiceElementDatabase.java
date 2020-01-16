@@ -9,13 +9,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-public class InvoiceElementDatabase extends Database {
-    public InvoiceElementDatabase(String user, String password) throws SQLException {
-        super(user, password);
-    }
+public class InvoiceElementDatabase {
+    Connection connection;
 
     public InvoiceElementDatabase(Connection connection) {
-        super(connection);
+        this.connection = connection;
     }
 
     public void deleteInvoiceElement(int invoice_id, int itemID, float quantity) throws SQLException {

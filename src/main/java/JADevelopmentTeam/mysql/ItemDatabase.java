@@ -6,20 +6,17 @@ import JADevelopmentTeam.TaxManager;
 import java.sql.*;
 import java.util.ArrayList;
 
-public class ItemDatabase extends Database {
+public class ItemDatabase {
+    Connection connection;
     public ItemDatabase(Connection connection) {
-        super(connection);
-    }
-
-    public ItemDatabase(String user, String password) throws SQLException {
-        super(user, password);
+        this.connection = connection;
     }
 
     public static Item resultToItem(ResultSet rs) throws SQLException {
         return new Item(rs.getString("name"),rs.getFloat("cost"), TaxManager.stringToTax(rs.getString("tax")), rs.getString("description"), rs.getInt("item_id"), rs.getInt("available_amount"));
     }
     public void add_item(Item item) throws SQLException {
-        preparedStatement = connection.prepareStatement("call add_item (?,?,?,?,?)");
+        PreparedStatement preparedStatement = connection.prepareStatement("call add_item (?,?,?,?,?)");
         preparedStatement.setString(1,item.getName());
         preparedStatement.setString(3,item.getDescription());
         preparedStatement.setString(2,TaxManager.taxToString(item.getTaxType()));
@@ -28,19 +25,19 @@ public class ItemDatabase extends Database {
         preparedStatement.executeUpdate();
     }
     public void deleteItem(int id) throws SQLException {
-        preparedStatement = connection.prepareStatement("call delete_item(?)");
+        PreparedStatement preparedStatement = connection.prepareStatement("call delete_item(?)");
         preparedStatement.setInt(1,id);
         preparedStatement.executeUpdate();
     }
     public void editAvailableAmount(int id,float availableAmount) throws SQLException {
-        preparedStatement = connection.prepareStatement("call edit_available_amount(?,?)");
+        PreparedStatement  preparedStatement = connection.prepareStatement("call edit_available_amount(?,?)");
         preparedStatement.setInt(1,id);
         preparedStatement.setFloat(2,availableAmount);
         preparedStatement.execute();
 
     }
     public void editItemCost(int id,float newCost) throws SQLException {
-        preparedStatement = connection.prepareStatement("call edit_item_cost(?,?)");
+        PreparedStatement  preparedStatement = connection.prepareStatement("call edit_item_cost(?,?)");
         preparedStatement.setInt(1,id);
         preparedStatement.setFloat(2,newCost);
         preparedStatement.execute();
