@@ -47,6 +47,8 @@
                   <Image url="@../user.png" />
                </image>
             </ImageView>
+            <JFXButton fx:id="loadBackupButton" buttonType="RAISED" layoutX="1.0" layoutY="326.0"  prefHeight="50.0" prefWidth="250.0" ripplerFill="WHITE" text="Load Backup" textAlignment="CENTER" textFill="WHITE" textOverrun="CLIP" />
+            <JFXButton fx:id="saveBackupButton" buttonType="RAISED" layoutX="1.0" layoutY="376.0"  prefHeight="50.0" prefWidth="250.0" ripplerFill="WHITE" text="Save Backup" textAlignment="CENTER" textFill="WHITE" textOverrun="CLIP" />
          </children>
       </AnchorPane>
       <AnchorPane layoutX="250.0" prefHeight="600.0" prefWidth="650.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="250.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
