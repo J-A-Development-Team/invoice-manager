@@ -26,8 +26,6 @@ public class InvoiceDatabase{
             invoiceBuilder.setElements(InvoiceElementDatabase.getAllInvoiceElements(rs.getInt("invoice_id"), connection));
             invoices.add(invoiceBuilder.createNewInvoice(ClientDatabase.resultToClient(rs), rs.getDate("date"), rs.getInt("invoice_id")));
         }
-        rs.beforeFirst();
-        rs.next();
         Collections.reverse(invoices);
         return invoices;
     }
