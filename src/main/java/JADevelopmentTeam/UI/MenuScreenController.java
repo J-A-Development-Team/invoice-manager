@@ -359,6 +359,10 @@ public class MenuScreenController {
     }
     private void loadBackup(){
         adminDatabase.load();
+        reloadClients();
+        reloadInvoices();
+        reloadItems();
+        reloadUsers();
     }
     private void saveBackup(){
         adminDatabase.save();
