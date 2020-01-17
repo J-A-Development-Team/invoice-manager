@@ -49,7 +49,7 @@ public class AdminDatabase  {
       return  new User(User.stringToType(rs.getString("type")),rs.getInt("id"),rs.getString("name"),rs.getString("password"));
 
     }
-    public static void save() throws Exception {
+    public static void save() {
         try {
 
             FileDialog dialog = new FileDialog((Frame) null, "Wybierz plik", FileDialog.SAVE);
@@ -95,7 +95,7 @@ public class AdminDatabase  {
             JOptionPane.showMessageDialog(null, "Error at Backuprestore" + ex.getMessage());
         }
     }
-    public static void load(String s) throws Exception{
+    public static void load() {
         try {
             FileDialog dialog = new FileDialog((Frame) null, "Wybierz plik", FileDialog.LOAD);
             dialog.setFile("*.sql");
@@ -110,7 +110,7 @@ public class AdminDatabase  {
                 String dbPass = "admin_password";
 
                 /*NOTE: Creating Path Constraints for restoring*/
-                String restorePath = dir + "\\backup" + "\\" + s;
+                String restorePath = dir + "\\backup" + "\\" +filename;
 
                 /*NOTE: Used to create a cmd command*/
                 /*NOTE: Do not create a single large string, this will cause buffer locking, use string array*/
@@ -122,7 +122,7 @@ public class AdminDatabase  {
 
                 /*NOTE: processComplete=0 if correctly executed, will contain other values if not*/
                 if (processComplete == 0) {
-                    JOptionPane.showMessageDialog(null, "Successfully restored from SQL : " + s);
+                    JOptionPane.showMessageDialog(null, "Successfully restored from SQL : " + filename);
                 } else {
                     JOptionPane.showMessageDialog(null, "Error at restoring");
                 }

@@ -88,6 +88,8 @@ public class MenuScreenController {
                 userMenuButton.setVisible(false);
                 userIcon.setVisible(false);
                 deleteInvoiceButton.setVisible(false);
+                saveBackupButton.setVisible(false);
+                loadBackupButton.setVisible(false);
                 break;
             case worker:
                 menuSidePane.setStyle("-fx-background-color:  #0787f0");
@@ -98,6 +100,8 @@ public class MenuScreenController {
                 deleteInvoiceButton.setVisible(false);
                 editAvailableAmountButton.setVisible(false);
                 deleteItemButton.setVisible(false);
+                saveBackupButton.setVisible(false);
+                loadBackupButton.setVisible(false);
                 break;
         }
     }
@@ -354,10 +358,10 @@ public class MenuScreenController {
 
     }
     private void loadBackup(){
-
+        adminDatabase.load();
     }
     private void saveBackup(){
-
+        adminDatabase.save();
     }
     @FXML
     private void initialize() {
