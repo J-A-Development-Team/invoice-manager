@@ -10,15 +10,13 @@ import com.jfoenix.controls.JFXListView;
 import com.jfoenix.controls.JFXToggleButton;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Insets;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.util.Pair;
@@ -53,6 +51,8 @@ public class MenuScreenController {
     public JFXButton userMenuButton;
     public JFXButton showInvoiceButton;
     public ImageView userIcon;
+    public JFXButton loadBackupButton;
+    public JFXButton saveBackupButton;
     Database database;
     InvoiceDatabase invoiceDatabase;
     ClientDatabase clientDatabase;
@@ -123,6 +123,8 @@ public class MenuScreenController {
         } else if (event.getSource() == itemMenuButton) {
             itemPane.toFront();
         } else if (event.getSource() == userMenuButton) {
+            usersPane.toFront();
+        } else if (event.getSource() == loadBackupButton) {
             usersPane.toFront();
         } else {
             logout();
@@ -351,7 +353,12 @@ public class MenuScreenController {
         }
 
     }
+    private void loadBackup(){
 
+    }
+    private void saveBackup(){
+
+    }
     @FXML
     private void initialize() {
         addInvoiceButton.setOnAction(event -> addInvoice());
@@ -365,5 +372,9 @@ public class MenuScreenController {
         editUserButton.setOnAction(event -> editUser());
         showOnlyAvailableItemsToggleButton.setOnAction(event -> reloadItems());
         showInvoiceButton.setOnAction(event -> showInvoice());
+        loadBackupButton.setOnAction(event -> loadBackup());
+        saveBackupButton.setOnAction(event -> saveBackup());
     }
+
+
 }
