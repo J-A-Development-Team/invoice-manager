@@ -5,23 +5,17 @@ import JADevelopmentTeam.Invoice;
 import JADevelopmentTeam.InvoiceBuilder;
 import JADevelopmentTeam.InvoiceElement;
 
-import java.sql.Connection;
-import java.sql.Date;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 
-public class InvoiceDatabase extends Database {
+public class InvoiceDatabase{
     private static InvoiceBuilder invoiceBuilder;
-
-    public InvoiceDatabase(String user, String password) throws SQLException {
-        super(user, password);
-    }
+    Connection connection;
 
     public InvoiceDatabase(Connection connection) {
-        super(connection);
+        this.connection = connection;
         invoiceBuilder = new InvoiceBuilder();
     }
 
@@ -41,7 +35,7 @@ public class InvoiceDatabase extends Database {
     public void addInvoice(Invoice invoice, int userID, int clientID) throws SQLException {
         connection.setAutoCommit(false);
         try {
-            preparedStatement = connection.prepareStatement("call add_invoice (?,?,?)");
+            PreparedStatement preparedStatement = connection.prepareStatement("call add_invoice (?,?,?)");
             preparedStatement.setInt(3, userID);
             preparedStatement.setInt(2, clientID);
             preparedStatement.setDate(1, new Date(invoice.getDate().getTime()));
@@ -73,7 +67,7 @@ public class InvoiceDatabase extends Database {
     }
 
     public void deleteInvoice(int invoiceId) throws SQLException {
-        preparedStatement = connection.prepareStatement("call delete_invoice(?)");
+        PreparedStatement preparedStatement = connection.prepareStatement("call delete_invoice(?)");
         preparedStatement.setInt(1, invoiceId);
         preparedStatement.executeUpdate();
     }
