@@ -13,13 +13,13 @@ create table client
 );
 create table invoice
 (
-	id int auto_increment,
+	invoice_id int auto_increment,
 	client_id int not null,
 	date date not null,
 	sale_date date not null,
 	modified boolean default false,
 	user_id int not null,
-	primary key (id)
+	primary key (invoice_id)
 );
 create table invoice_element
 (
@@ -27,7 +27,7 @@ create table invoice_element
 	item_id int not null,
 	quantity float not null,
 	constraint invoice_element_pk
-		primary key (invoice_id, item_id, quantity)
+    	primary key (invoice_id, item_id, quantity)
 );
 create table user
 (
@@ -39,131 +39,374 @@ create table user
 );
 create table item
 (
-	id int not null,
+	item_id int auto_increment,
 	name varchar(30) not null,
-	tax enum('23', '8', '5', '0', 'zw') default 'zw',
+	tax enum('23%', '8%', '5%', '0%', 'zw') default 'zw',
 	description varchar(200) default '',
 	cost float not null,
-	primary key (id)
+	primary key (item_id)
 );
 create table warehouse
 (
-	item_id int auto_increment,
+	item_id int not null,
 	available_amount float default 0,
 	primary key (item_id)
 );
-DELIMITER //
-CREATE TRIGGER date_check
-    BEFORE INSERT
-    ON invoice
-    FOR EACH ROW
-BEGIN
-    SET NEW.date = current_date;
-    IF NEW.sale_date > current_date THEN
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Invalid date!';
-    END IF;
-END//
-CREATE TRIGGER cost_check
-    BEFORE INSERT
-    ON item
-    FOR EACH ROW
-BEGIN
-    IF NEW.cost < 0 THEN
-        SIGNAL SQLSTATE '45001' SET MESSAGE_TEXT = 'Invalid item cost!';
-    END IF;
-END//
-CREATE TRIGGER amount_check_and_taking_product_from_warehouse
-    BEFORE INSERT
-    ON invoice_element
-    FOR EACH ROW
-BEGIN
-    SELECT w.available_amount,item.name
-    FROM item
-             INNER JOIN warehouse w on item.id = w.item_id
-    WHERE item.id = NEW.item_id
-    INTO @amount,@name;
-    IF NEW.quantity > @amount THEN
-        SET @info = CONCAT('Currently available is only ',@amount,'of  ',@name);
-        SIGNAL SQLSTATE '45002' SET MESSAGE_TEXT = @info;
-    ELSE
-        UPDATE warehouse
-        SET available_amount = @amount - NEW.quantity
-        WHERE warehouse.item_id = NEW.item_id;
-    END IF;
-END//
-CREATE TRIGGER password_encryption
-    BEFORE INSERT
-    ON user
-    FOR EACH ROW
-BEGIN
-    SET NEW.password = md5(NEW.password);
-END//
-CREATE TRIGGER product_returning_to_warehouse
-    BEFORE DELETE
-    ON invoice_element
-    FOR EACH ROW
-BEGIN
-    UPDATE warehouse
-    SET available_amount = warehouse.available_amount + OLD.quantity
-    WHERE warehouse.item_id = OLD.item_id;
-END//
-CREATE TRIGGER deleting_invoice
-    BEFORE DELETE
-    ON invoice
-    FOR EACH ROW
-BEGIN
-    DELETE invoice_element FROM invoice_element WHERE invoice_id = OLD.id;
-END//
-DELIMITER ;
+
 alter table invoice
 	add constraint invoice_client_id_fk
-		foreign key (client_id) references client (id),
+    	foreign key (client_id) references client (id),
 	add constraint invoice_user_id_fk
-		foreign key (user_id) references user (id);
+    	foreign key (user_id) references user (id);
 alter table invoice_element
 	add constraint invoice_element_invoice_id_fk
-		foreign key (invoice_id) references invoice (id),
-    add constraint invoice_element_item_id_fk
-		foreign key (item_id) references item (id);
+    	foreign key (invoice_id) references invoice (invoice_id),
+	add constraint invoice_element_item_id_fk
+    	foreign key (item_id) references item (item_id);
 CREATE INDEX item_index ON invoice_element(item_id);
-alter table item
-    add constraint item_warehouse_item_id_fk
-		foreign key (id) references warehouse (item_id);
+create unique index user_name_uindex
+    on user (name);
+alter table warehouse
+	add constraint warehouse_item_item_id_fk
+    	foreign key (item_id) references item (item_id);
+
 DELIMITER //
-CREATE TRIGGER client_verification_insert
-    BEFORE INSERT
-    ON client
-    FOR EACH ROW
+CREATE TRIGGER date_check
+	BEFORE INSERT
+	ON invoice
+	FOR EACH ROW
 BEGIN
-    SET @nipLenght = length(NEW.NIP);
-    SET @postcode = CONCAT(SUBSTRING(NEW.postcode, 1, 2), SUBSTRING(NEW.postcode, 4, 3));
-    IF (length(NEW.postcode) != 6 OR SUBSTRING(NEW.postcode, 3, 1) != '-' OR
-        @postcode NOT REGEXP '^[0-9]+$') THEN
-        SIGNAL SQLSTATE '45004' SET MESSAGE_TEXT = 'Invalid postcode, should be 00-000!';
-    end if;
-    IF (@nipLenght < 9 OR NEW.NIP NOT REGEXP '^[0-9]+$') THEN
-        SIGNAL SQLSTATE '45003' SET MESSAGE_TEXT = 'Invalid NIP/PESEL!';
-    end if;
+	SET NEW.date = current_date;
+	IF NEW.sale_date > current_date THEN
+    	SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Invalid date!';
+	END IF;
+END//
+CREATE TRIGGER cost_check
+	BEFORE INSERT
+	ON item
+	FOR EACH ROW
+BEGIN
+	IF NEW.cost < 0 THEN
+    	SIGNAL SQLSTATE '45001' SET MESSAGE_TEXT = 'Invalid item cost!';
+	END IF;
+END//
+CREATE TRIGGER amount_check_and_taking_product_from_warehouse
+	BEFORE INSERT
+	ON invoice_element
+	FOR EACH ROW
+BEGIN
+	SELECT w.available_amount,item.name
+	FROM item
+         	INNER JOIN warehouse w on item.item_id = w.item_id
+	WHERE item.item_id = NEW.item_id
+	INTO @amount,@name;
+	IF NEW.quantity > @amount THEN
+    	SET @info = CONCAT('Currently available is only ',@amount,'of  ',@name);
+    	SIGNAL SQLSTATE '45002' SET MESSAGE_TEXT = @info;
+	ELSE
+    	UPDATE warehouse
+    	SET available_amount = @amount - NEW.quantity
+    	WHERE warehouse.item_id = NEW.item_id;
+	END IF;
+END//
+CREATE TRIGGER product_returning_to_warehouse
+	BEFORE DELETE
+	ON invoice_element
+	FOR EACH ROW
+BEGIN
+	UPDATE warehouse
+	SET available_amount = warehouse.available_amount + OLD.quantity
+	WHERE warehouse.item_id = OLD.item_id;
+END//
+CREATE TRIGGER deleting_invoice
+	BEFORE DELETE
+	ON invoice
+	FOR EACH ROW
+BEGIN
+	DELETE invoice_element FROM invoice_element WHERE invoice_id = OLD.invoice_id;
+END//
+CREATE TRIGGER client_verification_insert
+	BEFORE INSERT
+	ON client
+	FOR EACH ROW
+BEGIN
+	SET @nipLenght = length(NEW.NIP);
+	SET @postcode = CONCAT(SUBSTRING(NEW.postcode, 1, 2), SUBSTRING(NEW.postcode, 4, 3));
+	IF (length(NEW.postcode) != 6 OR SUBSTRING(NEW.postcode, 3, 1) != '-' OR
+    	@postcode NOT REGEXP '^[0-9]+$') THEN
+    	SIGNAL SQLSTATE '45004' SET MESSAGE_TEXT = 'Invalid postcode, should be 00-000!';
+	end if;
+	IF (@nipLenght < 9 OR NEW.NIP NOT REGEXP '^[0-9]+$') THEN
+    	SIGNAL SQLSTATE '45003' SET MESSAGE_TEXT = 'Invalid NIP/PESEL!';
+	end if;
 END//
 CREATE TRIGGER client_verification_update
-    BEFORE UPDATE
-    ON client
-    FOR EACH ROW
+	BEFORE UPDATE
+	ON client
+	FOR EACH ROW
 BEGIN
-    SET @nipLenght = length(NEW.NIP);
-    SET @postcode = CONCAT(SUBSTRING(NEW.postcode, 1, 2), SUBSTRING(NEW.postcode, 4, 3));
-    IF (length(NEW.postcode) != 6 OR SUBSTRING(NEW.postcode, 3, 1) != '-' OR
-        @postcode NOT REGEXP '^[0-9]+$') THEN
-        SIGNAL SQLSTATE '45004' SET MESSAGE_TEXT = 'Invalid postcode, should be 00-000!';
-    end if;
-    IF (@nipLenght < 9 OR NEW.NIP NOT REGEXP '^[0-9]+$') THEN
-        SIGNAL SQLSTATE '45003' SET MESSAGE_TEXT = 'Invalid NIP/PESEL!';
-    end if;
+	SET @nipLenght = length(NEW.NIP);
+	SET @postcode = CONCAT(SUBSTRING(NEW.postcode, 1, 2), SUBSTRING(NEW.postcode, 4, 3));
+	IF (length(NEW.postcode) != 6 OR SUBSTRING(NEW.postcode, 3, 1) != '-' OR
+    	@postcode NOT REGEXP '^[0-9]+$') THEN
+    	SIGNAL SQLSTATE '45004' SET MESSAGE_TEXT = 'Invalid postcode, should be 00-000!';
+	end if;
+	IF (@nipLenght < 9 OR NEW.NIP NOT REGEXP '^[0-9]+$') THEN
+    	SIGNAL SQLSTATE '45003' SET MESSAGE_TEXT = 'Invalid NIP/PESEL!';
+	end if;
 END//
 DELIMITER ;
+
+
+
+drop procedure if exists add_client;
+DELIMITER //
+create procedure add_client(
+in p_name varchar(45),
+in p_NIP varchar(10),
+in p_city varchar(45),
+in p_street_and_number varchar(45),
+in p_postcode varchar(6)
+)
+BEGIN
+	INSERT INTO client(name, NIP, city, street_and_number, postcode) VALUES (p_name,p_NIP,p_city,p_street_and_number,p_postcode);
+end//
+delimiter ;
+drop procedure if exists add_invoice_element;
+DELIMITER //
+create procedure add_invoice_element(
+IN p_invoice_id INT,
+IN p_item_id INT,
+IN p_quantity FLOAT
+)
+BEGIN
+	INSERT INTO invoice_element (invoice_id, item_id, quantity) VALUES (p_invoice_id,p_item_id,p_quantity);
+end//
+delimiter ;
+drop procedure if exists add_invoice;
+DELIMITER //
+create procedure add_invoice(
+in p_sale_date DATE,
+in p_client_id INT,
+in p_user_id INT
+)
+BEGIN
+    INSERT INTO invoice (client_id, date, sale_date, modified, user_id) VALUES (p_client_id,p_sale_date,p_sale_date,false,p_user_id);
+end//
+delimiter ;
+drop procedure if exists add_item;
+DELIMITER //
+create procedure add_item(
+IN p_name varchar(30),
+IN p_tax enum('23%', '8%', '5%', '0%', 'zw'),
+IN p_description varchar(200),
+IN p_cost float,
+IN p_available_amount float
+)
+BEGIN
+    INSERT INTO item(name, tax, description, cost) VALUES (p_name,p_tax,p_description,p_cost);
+    set @id = (select last_insert_id() from item limit 1);
+    insert into warehouse(item_id, available_amount) VALUES (@id,p_available_amount);
+end//
+delimiter ;
+drop procedure if exists add_user;
+DELIMITER //
+create procedure add_user(IN p_name varchar(20),
+                      	IN p_password varchar(100),
+                      	IN p_type enum ('admin', 'manager', 'worker'))
+BEGIN
+	set @hash = md5(p_password);
+	INSERT INTO user(name, password, type)
+	VALUES (p_name, @hash, p_type);
+end//
+delimiter ;
+drop function if exists authenticate;
+DELIMITER //
+create function authenticate(user_name varchar(20), user_password varchar(100),
+                         	user_type enum ('admin', 'manager', 'worker'))
+	returns varchar(32) deterministic
+begin
+	if (select user.type from user where user.name = user_name) = user_type then
+    	if md5(user_password) = (select user.password from user where user.name = user_name limit 1) then
+        	return (select user.id from user where user.name = user_name);
+    	end if;
+	end if;
+	return -1;
+
+end;
+//
+delimiter ;
+drop procedure if exists delete_invoice_element;
+DELIMITER //
+create procedure delete_invoice_element(IN p_invoice_id int(11), IN p_item_id int (11),IN p_quantity float)
+BEGIN
+    delete from invoice_element where invoice_id = p_invoice_id and item_id = p_item_id and quantity = p_quantity;
+end//
+delimiter ;
+drop procedure if exists delete_invoice;
+DELIMITER //
+create procedure delete_invoice(IN p_invoice_id int(11))
+BEGIN
+	delete from invoice where invoice_id = p_invoice_id;
+end//
+delimiter ;
+drop procedure if exists delete_item;
+DELIMITER //
+create procedure delete_item(IN p_item_id int(11))
+BEGIN
+	update warehouse set available_amount = 0 where item_id = p_item_id;
+end//
+delimiter ;
+drop procedure if exists edit_available_amount;
+DELIMITER //
+create procedure edit_available_amount(IN p_item_id int(11),
+                                   	IN p_new_amount float)
+BEGIN
+	update warehouse set available_amount = p_new_amount where item_id = p_item_id;
+end//
+delimiter ;
+drop procedure if exists edit_item_cost;
+DELIMITER //
+create procedure edit_item_cost(IN p_item_id int(11),
+                            	IN p_new_cost float)
+BEGIN
+	set @old_item_id = p_item_id;
+	set @old_item_name = (select item.name from item where item_id = @old_item_id limit 1);
+	set @old_item_tax = (select item.tax from item where item.item_id = @old_item_id limit 1);
+	set @old_item_desc = (select item.name from item where item_id = @old_item_id limit 1);
+	set @old_item_av = (select warehouse.available_amount from warehouse where item_id = @old_item_id limit 1);
+
+	insert into item(name, tax, description, cost)
+	VALUES (@old_item_name, @old_item_tax, @old_item_desc, p_new_cost);
+	set @id = (select last_insert_id() from item limit 1);
+	insert into warehouse(item_id, available_amount) VALUES (@id, @old_item_av);
+	update warehouse set available_amount = 0 where item_id = @old_item_id;
+
+end//
+delimiter ;
+drop procedure if exists edit_user;
+DELIMITER //
+create procedure edit_user(IN p_user_id int(11),
+                       	IN p_new_name varchar(20),
+                       	IN p_new_password varchar(100))
+BEGIN
+	update user set name = p_new_name where id = p_user_id;
+	update user set password = md5(p_new_password) where id = p_user_id;
+end//
+delimiter ;
+drop procedure if exists get_all_clients;
+DELIMITER //
+create procedure get_all_clients()
+BEGIN
+	select * from client;
+end//
+delimiter ;
+drop procedure if exists get_all_invoice_elements_for_invoice_id;
+DELIMITER //
+create procedure get_all_invoice_elements_for_invoice_id(
+IN p_invoice_id int(11)
+)
+BEGIN
+	select * from invoice_element inner join  item i on invoice_element.item_id = i.item_id inner join warehouse w on i.item_id = w.item_id where invoice_id = p_invoice_id;
+end//
+delimiter ;
+drop procedure if exists get_all_invoices;
+DELIMITER //
+create procedure get_all_invoices()
+BEGIN
+	select * from invoice inner join client c on invoice.client_id = c.id;
+end//
+delimiter ;
+drop procedure if exists get_all_items_with_amount;
+DELIMITER //
+create procedure get_all_items_with_amount()
+BEGIN
+	select item.item_id,item.name,item.tax,item.cost,item.description,warehouse.available_amount from item inner join warehouse on item.item_id = warehouse.item_id;
+end//
+delimiter ;
+drop procedure if exists get_all_users;
+DELIMITER //
+create procedure get_all_users()
+BEGIN
+	select * from user;
+end//
+delimiter ;
+drop procedure if exists get_item_for_id;
+DELIMITER //
+create procedure get_item_for_id(
+IN p_item_id int(11)
+)
+BEGIN
+	select * from item where item_id = p_item_id;
+end//
+delimiter ;
+drop procedure if exists get_last_invoice_id;
+DELIMITER //
+create procedure get_last_invoice_id()
+BEGIN
+	select last_insert_id() from invoice limit 1;
+end//
+delimiter ;
 DROP USER IF EXISTS 'invoice_admin'@'localhost';
 DROP USER IF EXISTS 'invoice_manager'@'localhost';
 DROP USER IF EXISTS 'invoice_worker'@'localhost';
 CREATE USER 'invoice_admin'@'localhost' IDENTIFIED BY 'admin_password';
 CREATE USER 'invoice_manager'@'localhost' IDENTIFIED BY 'manager_password';
 CREATE USER 'invoice_worker'@'localhost' IDENTIFIED BY 'worker_password';
+
+GRANT EXECUTE ON FUNCTION authenticate  TO 'invoice_admin'@'localhost';
+GRANT EXECUTE ON FUNCTION authenticate  TO 'invoice_manager'@'localhost';
+GRANT EXECUTE ON FUNCTION authenticate  TO 'invoice_worker'@'localhost';
+
+GRANT EXECUTE ON PROCEDURE get_all_invoices  TO 'invoice_worker'@'localhost';
+GRANT EXECUTE ON PROCEDURE get_all_invoices  TO 'invoice_admin'@'localhost';
+GRANT EXECUTE ON PROCEDURE get_all_invoices  TO 'invoice_manager'@'localhost';
+
+GRANT EXECUTE ON PROCEDURE get_all_invoice_elements_for_invoice_id  TO 'invoice_worker'@'localhost';
+GRANT EXECUTE ON PROCEDURE get_all_invoice_elements_for_invoice_id  TO 'invoice_admin'@'localhost';
+GRANT EXECUTE ON PROCEDURE get_all_invoice_elements_for_invoice_id  TO 'invoice_manager'@'localhost';
+
+GRANT EXECUTE ON PROCEDURE get_all_clients  TO 'invoice_worker'@'localhost';
+GRANT EXECUTE ON PROCEDURE get_all_clients  TO 'invoice_admin'@'localhost';
+GRANT EXECUTE ON PROCEDURE get_all_clients  TO 'invoice_manager'@'localhost';
+
+GRANT EXECUTE ON PROCEDURE get_all_items_with_amount  TO 'invoice_worker'@'localhost';
+GRANT EXECUTE ON PROCEDURE get_all_items_with_amount  TO 'invoice_admin'@'localhost';
+GRANT EXECUTE ON PROCEDURE get_all_items_with_amount  TO 'invoice_manager'@'localhost';
+
+GRANT EXECUTE ON PROCEDURE add_invoice  TO 'invoice_worker'@'localhost';
+GRANT EXECUTE ON PROCEDURE add_invoice  TO 'invoice_admin'@'localhost';
+GRANT EXECUTE ON PROCEDURE add_invoice  TO 'invoice_manager'@'localhost';
+
+GRANT EXECUTE ON PROCEDURE get_last_invoice_id  TO 'invoice_worker'@'localhost';
+GRANT EXECUTE ON PROCEDURE get_last_invoice_id  TO 'invoice_admin'@'localhost';
+GRANT EXECUTE ON PROCEDURE get_last_invoice_id  TO 'invoice_manager'@'localhost';
+
+GRANT EXECUTE ON PROCEDURE add_invoice_element  TO 'invoice_worker'@'localhost';
+GRANT EXECUTE ON PROCEDURE add_invoice_element  TO 'invoice_admin'@'localhost';
+GRANT EXECUTE ON PROCEDURE add_invoice_element  TO 'invoice_manager'@'localhost';
+
+GRANT EXECUTE ON PROCEDURE add_client  TO 'invoice_worker'@'localhost';
+GRANT EXECUTE ON PROCEDURE add_client  TO 'invoice_admin'@'localhost';
+GRANT EXECUTE ON PROCEDURE add_client  TO 'invoice_manager'@'localhost';
+
+GRANT EXECUTE ON PROCEDURE add_item  TO 'invoice_admin'@'localhost';
+GRANT EXECUTE ON PROCEDURE add_item  TO 'invoice_manager'@'localhost';
+
+GRANT EXECUTE ON PROCEDURE edit_item_cost  TO 'invoice_admin'@'localhost';
+GRANT EXECUTE ON PROCEDURE edit_item_cost  TO 'invoice_manager'@'localhost';
+
+GRANT EXECUTE ON PROCEDURE edit_available_amount  TO 'invoice_admin'@'localhost';
+GRANT EXECUTE ON PROCEDURE edit_available_amount  TO 'invoice_manager'@'localhost';
+
+GRANT EXECUTE ON PROCEDURE delete_item  TO 'invoice_admin'@'localhost';
+
+GRANT EXECUTE ON PROCEDURE delete_invoice  TO 'invoice_admin'@'localhost';
+
+GRANT EXECUTE ON PROCEDURE get_all_users  TO 'invoice_admin'@'localhost';
+
+GRANT EXECUTE ON PROCEDURE add_user  TO 'invoice_admin'@'localhost';
+
+GRANT EXECUTE ON PROCEDURE edit_user  TO 'invoice_admin'@'localhost';
+
+GRANT EXECUTE ON PROCEDURE delete_invoice_element  TO 'invoice_admin'@'localhost';
